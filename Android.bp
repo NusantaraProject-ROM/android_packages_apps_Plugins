@@ -1,0 +1,24 @@
+android_app {
+
+    name: "PotatoPlugins",
+
+    libs: [
+        "SystemUIPluginLib"
+    ],
+    
+    static_libs: [
+        "SystemUI-core"
+    ],
+
+    resource_dirs: [
+        "res"
+    ],
+
+    certificate: "platform",
+    optimize: {
+        enabled: false,
+    },
+
+    srcs: ["src/**/*.java"],
+
+}
