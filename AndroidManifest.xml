@@ -24,7 +24,7 @@
 
     <application>
         <activity android:name=".PluginSettings"
-            android:label="Oreo QS">
+            android:label="PotatoPlugins">
             <intent-filter>
                 <action android:name="com.android.systemui.action.PLUGIN_SETTINGS" />
             </intent-filter>
