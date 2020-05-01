@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package co.potatoproject.plugin.volume.fancy;
+package co.potatoproject.plugin.volume;
 
 import static android.app.ActivityManager.LOCK_TASK_MODE_NONE;
 import static android.media.AudioManager.RINGER_MODE_NORMAL;
@@ -99,15 +99,6 @@ import com.android.systemui.plugins.VolumeDialogController.State;
 import com.android.systemui.plugins.VolumeDialogController.StreamState;
 import com.android.systemui.plugins.annotations.Requires;
 import com.android.systemui.statusbar.policy.ConfigurationController;
-import co.potatoproject.plugin.volume.CaptionsToggleImageButton;
-import co.potatoproject.plugin.volume.ConfigurableTexts;
-import co.potatoproject.plugin.volume.D;
-import co.potatoproject.plugin.volume.Events;
-import co.potatoproject.plugin.volume.SafetyWarningDialog;
-import co.potatoproject.plugin.volume.SystemUIInterpolators;
-import co.potatoproject.plugin.volume.Util;
-import co.potatoproject.plugin.volume.VolumePrefs;
-import co.potatoproject.plugin.volume.VolumeToolTipView;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -1471,6 +1462,11 @@ public class VolumeDialogImpl implements VolumeDialog,
                 if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
                     dismissH(Events.DISMISS_REASON_TOUCH_OUTSIDE);
                     return true;
+                } else {
+                    if(mPanelMode == PanelMode.MINI) {
+                        mPanelMode = PanelMode.COLLAPSED;
+                        updatePanelOnMode();
+                    }
                 }
             }
             return false;
@@ -1515,8 +1511,10 @@ public class VolumeDialogImpl implements VolumeDialog,
             if (D.BUG) Log.d(TAG, "onStartTrackingTouch"+ " " + mRow.stream);
             mController.setActiveStream(mRow.stream);
             mRow.tracking = true;
-            mPanelMode = PanelMode.COLLAPSED;
-            updatePanelOnMode();
+            if(mPanelMode == PanelMode.MINI) {
+                mPanelMode = PanelMode.COLLAPSED;
+                updatePanelOnMode();
+            }
         }
 
         @Override

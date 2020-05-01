@@ -2,7 +2,7 @@
 
 <resources>
     <!-- POSP -->
-    <dimen name="volume_dialog_panel_mini_width">44dp</dimen>
+    <dimen name="volume_dialog_panel_mini_width">40dp</dimen>
 
     <dimen name="volume_dialog_panel_collapsed_width">72dp</dimen>
 

@@ -23,15 +23,9 @@
 
     <uses-permission android:name="com.android.systemui.permission.PLUGIN" />
 
-    <application>
-        <activity android:name=".PluginSettings"
-            android:label="PotatoPlugins">
-            <intent-filter>
-                <action android:name="com.android.systemui.action.PLUGIN_SETTINGS" />
-            </intent-filter>
-        </activity>
-
-        <service android:name=".volume.fancy.VolumeDialogImpl"
+    <application
+        android:label="Fancy volume panel">
+        <service android:name=".volume.VolumeDialogImpl"
             android:label="Fancy volume panel">
             <intent-filter>
                 <action android:name="com.android.systemui.action.PLUGIN_VOLUME" />
