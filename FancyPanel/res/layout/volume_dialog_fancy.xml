@@ -97,7 +97,7 @@
                 android:layout_width="@dimen/volume_dialog_caption_size"
                 android:layout_height="@dimen/volume_dialog_caption_size"
                 android:clipToPadding="false">
-                <co.potatoproject.plugin.volume.CaptionsToggleImageButton
+                <co.potatoproject.plugin.volume.fancy.CaptionsToggleImageButton
                     android:id="@+id/odi_captions_icon"
                     android:src="@drawable/ic_volume_odi_captions_disabled"
                     style="@style/VolumeButtons"

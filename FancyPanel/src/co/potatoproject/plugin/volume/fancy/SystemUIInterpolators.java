@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package co.potatoproject.plugin.volume;
+package co.potatoproject.plugin.volume.fancy;
 
 import android.animation.TimeInterpolator;
 

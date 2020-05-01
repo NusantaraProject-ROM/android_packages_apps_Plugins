@@ -16,17 +16,15 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:sharedUserId="android.uid.systemui"
     package="co.potatoproject.plugin">
 
     <uses-permission android:name="com.android.systemui.permission.PLUGIN" />
 
     <application
-        android:label="Fancy volume panel">
-        <service android:name=".volume.VolumeDialogImpl"
-            android:label="Fancy volume panel">
+        android:label="@string/plugin_label">
+        <service android:name=".volume.fancy.VolumeDialogImpl"
+            android:label="@string/plugin_label">
             <intent-filter>
                 <action android:name="com.android.systemui.action.PLUGIN_VOLUME" />
             </intent-filter>
