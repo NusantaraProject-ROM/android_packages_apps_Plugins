@@ -38,13 +38,6 @@
             </intent-filter>
         </service>
 
-        <!-- <service android:name=".volume.aospa.VolumeDialogImpl"
-            android:label="AOSPA volume panel">
-            <intent-filter>
-                <action android:name="com.android.systemui.action.PLUGIN_VOLUME" />
-            </intent-filter>
-        </service> -->
-
         <provider
             android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
             android:authorities="co.potatoproject.plugin"
