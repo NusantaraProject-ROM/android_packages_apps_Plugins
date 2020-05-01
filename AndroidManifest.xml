@@ -17,6 +17,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:sharedUserId="android.uid.systemui"
     package="co.potatoproject.plugin">
 
@@ -30,12 +31,26 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".oreoqs.QSFragment"
-            android:label="Oreo QS">
+        <service android:name=".volume.fancy.VolumeDialogImpl"
+            android:label="Fancy volume panel">
             <intent-filter>
-                <action android:name="com.android.systemui.action.PLUGIN_QS" />
+                <action android:name="com.android.systemui.action.PLUGIN_VOLUME" />
             </intent-filter>
         </service>
+
+        <!-- <service android:name=".volume.aospa.VolumeDialogImpl"
+            android:label="AOSPA volume panel">
+            <intent-filter>
+                <action android:name="com.android.systemui.action.PLUGIN_VOLUME" />
+            </intent-filter>
+        </service> -->
+
+        <provider
+            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+            android:authorities="co.potatoproject.plugin"
+            tools:replace="android:authorities"
+            android:exported="false"
+            android:multiprocess="true" />
     </application>
 
 </manifest>

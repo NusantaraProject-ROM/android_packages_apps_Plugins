@@ -7,7 +7,7 @@ android_app {
     ],
     
     static_libs: [
-        "SystemUI-core"
+        "SystemUI-libs"
     ],
 
     resource_dirs: [

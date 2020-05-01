@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Title for media output settings -->
+    <string name="media_output_title">Play media to</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- POSP -->
+    <dimen name="volume_dialog_panel_mini_width">44dp</dimen>
+
+    <dimen name="volume_dialog_panel_collapsed_width">72dp</dimen>
+
+    <dimen name="volume_dialog_fancy_slider_height">132dp</dimen>
+
+    <dimen name="volume_dialog_total_height">348dp</dimen>
+
+    <dimen name="volume_dialog_fancy_slider_margin_bottom">4dp</dimen>
+
+    <dimen name="volume_dialog_fancy_elevation">6dp</dimen>
+
+    <!-- AOSPA -->
+    <dimen name="volume_dialog_panel_transparent_padding_left_right">8dp</dimen>
+
+    <dimen name="volume_dialog_panel_width">58dp</dimen>
+    <dimen name="volume_dialog_slider_height">210dp</dimen>
+    <dimen name="volume_dialog_icon_padding">14dp</dimen>
+    <dimen name="volume_dialog_tap_target_size">@dimen/volume_dialog_panel_width</dimen>
+
+    <dimen name="volume_dialog_button_height">45dp</dimen>
+    <dimen name="volume_dialog_row_icon_size">24dp</dimen>
+    <dimen name="volume_dialog_row_spacer">@dimen/volume_dialog_spacer</dimen>
+
+    <dimen name="volume_tool_tip_arrow_height">8dp</dimen>
+    <dimen name="volume_tool_tip_arrow_width">10dp</dimen>
+    <dimen name="volume_tool_tip_arrow_margin_container">-2dp</dimen>
+    <dimen name="volume_tool_tip_arrow_margin_start">24dp</dimen>
+</resources>
