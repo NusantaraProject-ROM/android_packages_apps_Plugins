@@ -17,7 +17,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="co.potatoproject.plugin.volume.fancy">
+    package="co.potatoproject.plugin.volume.toggle">
 
     <uses-permission android:name="com.android.systemui.permission.PLUGIN" />
 
@@ -32,7 +32,7 @@
 
         <provider
             android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-            android:authorities="co.potatoproject.plugin.volume.fancy"
+            android:authorities="co.potatoproject.plugin.volume.toggle"
             tools:replace="android:authorities"
             android:exported="false"
             android:multiprocess="true" />
