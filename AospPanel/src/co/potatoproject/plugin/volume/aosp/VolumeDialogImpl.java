@@ -90,13 +90,13 @@ import com.android.systemui.Dependency;
 import com.android.systemui.Prefs;
 import com.android.systemui.R;
 import com.android.systemui.plugins.ActivityStarter;
+import com.android.systemui.plugins.PluginDependency;
 import com.android.systemui.plugins.VolumeDialog;
 import com.android.systemui.plugins.VolumeDialogController;
 import com.android.systemui.plugins.VolumeDialogController.State;
 import com.android.systemui.plugins.VolumeDialogController.StreamState;
-import com.android.systemui.statusbar.policy.AccessibilityManagerWrapper;
-import com.android.systemui.statusbar.policy.ConfigurationController;
-import com.android.systemui.statusbar.policy.DeviceProvisionedController;
+import com.android.systemui.plugins.annotations.Requires;
+import com.android.systemui.statusbar.policy.DeviceProvisionedControllerImpl;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -109,8 +109,11 @@ import java.util.List;
  *
  * Methods ending in "H" must be called on the (ui) handler.
  */
-public class VolumeDialogImpl implements VolumeDialog,
-        ConfigurationController.ConfigurationListener {
+@Requires(target = VolumeDialog.class, version = VolumeDialog.VERSION)
+@Requires(target = VolumeDialog.Callback.class, version = VolumeDialog.Callback.VERSION)
+@Requires(target = VolumeDialogController.class, version = VolumeDialogController.VERSION)
+@Requires(target = ActivityStarter.class, version = ActivityStarter.VERSION)
+public class VolumeDialogImpl implements VolumeDialog {
     private static final String TAG = Util.logTag(VolumeDialogImpl.class);
 
     private static final long USER_ATTEMPT_GRACE_PERIOD = 1000;
@@ -123,10 +126,10 @@ public class VolumeDialogImpl implements VolumeDialog,
     static final int DIALOG_SHOW_ANIMATION_DURATION = 300;
     static final int DIALOG_HIDE_ANIMATION_DURATION = 250;
 
-    private final Context mContext;
+    private Context mContext;
     private final H mHandler = new H();
-    private final VolumeDialogController mController;
-    private final DeviceProvisionedController mDeviceProvisionedController;
+    private VolumeDialogController mController;
+    private DeviceProvisionedControllerImpl mDeviceProvisionedController;
 
     private Window mWindow;
     private CustomDialog mDialog;
@@ -141,10 +144,10 @@ public class VolumeDialogImpl implements VolumeDialog,
     private FrameLayout mZenIcon;
     private final List<VolumeRow> mRows = new ArrayList<>();
     private ConfigurableTexts mConfigurableTexts;
-    private final SparseBooleanArray mDynamic = new SparseBooleanArray();
-    private final KeyguardManager mKeyguard;
-    private final ActivityManager mActivityManager;
-    private final AccessibilityManagerWrapper mAccessibilityMgr;
+    private SparseBooleanArray mDynamic = new SparseBooleanArray();
+    private KeyguardManager mKeyguard;
+    private ActivityManager mActivityManager;
+    private AccessibilityManager mAccessibilityMgr;
     private final Object mSafetyWarningLock = new Object();
     private final Accessibility mAccessibility = new Accessibility();
 
@@ -166,23 +169,21 @@ public class VolumeDialogImpl implements VolumeDialog,
 
     private boolean mLeftVolumeRocker;
 
-    public VolumeDialogImpl(Context context) {
-        mContext =
-                new ContextThemeWrapper(context, R.style.qs_theme);
-        mController = Dependency.get(VolumeDialogController.class);
-        mKeyguard = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
-        mActivityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        mAccessibilityMgr = Dependency.get(AccessibilityManagerWrapper.class);
-        mDeviceProvisionedController = Dependency.get(DeviceProvisionedController.class);
-        mShowActiveStreamOnly = showActiveStreamOnly();
-        mHasSeenODICaptionsTooltip =
-                Prefs.getBoolean(context, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, false);
-        mLeftVolumeRocker = mContext.getResources().getBoolean(R.bool.config_audioPanelOnLeftSide);
-    }
+    public VolumeDialogImpl() {}
 
     @Override
-    public void onUiModeChanged() {
-        mContext.getTheme().applyStyle(mContext.getThemeResId(), true);
+    public void onCreate(Context sysuiContext, Context pluginContext) {
+        mContext =
+                new ContextThemeWrapper(pluginContext, R.style.qs_theme);
+        mController = PluginDependency.get(this, VolumeDialogController.class);
+        mKeyguard = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
+        mActivityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        mAccessibilityMgr = mContext.getSystemService(AccessibilityManager.class);
+        mDeviceProvisionedController = new DeviceProvisionedControllerImpl(sysuiContext, mHandler);
+        mShowActiveStreamOnly = showActiveStreamOnly();
+        mHasSeenODICaptionsTooltip =
+                Prefs.getBoolean(sysuiContext, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, false);
+        mLeftVolumeRocker = mContext.getResources().getBoolean(R.bool.config_audioPanelOnLeftSide);
     }
 
     public void init(int windowType, Callback callback) {
@@ -192,15 +193,12 @@ public class VolumeDialogImpl implements VolumeDialog,
 
         mController.addCallback(mControllerCallbackH, mHandler);
         mController.getState();
-
-        Dependency.get(ConfigurationController.class).addCallback(this);
     }
 
     @Override
     public void destroy() {
         mController.removeCallback(mControllerCallbackH);
         mHandler.removeCallbacksAndMessages(null);
-        Dependency.get(ConfigurationController.class).removeCallback(this);
     }
 
     private void initDialog() {
@@ -234,7 +232,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         mWindow.setAttributes(lp);
         mWindow.setLayout(WRAP_CONTENT, WRAP_CONTENT);
 
-        mDialog.setContentView(R.layout.volume_dialog);
+        mDialog.setContentView(R.layout.volume_dialog_aosp);
         mDialogView = mDialog.findViewById(R.id.volume_dialog);
         mDialogView.setAlpha(0);
         mDialog.setCanceledOnTouchOutside(true);
@@ -320,6 +318,8 @@ public class VolumeDialogImpl implements VolumeDialog,
         } else {
             addExistingRows();
         }
+
+        mContext.getTheme().applyStyle(mContext.getThemeResId(), true);
 
         updateRowsH(getActiveRow());
         initRingerH();
@@ -438,7 +438,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         row.iconMuteRes = iconMuteRes;
         row.important = important;
         row.defaultStream = defaultStream;
-        row.view = mDialog.getLayoutInflater().inflate(R.layout.volume_dialog_row, null);
+        row.view = mDialog.getLayoutInflater().inflate(R.layout.volume_dialog_aosp_row, null);
         row.view.setId(row.stream);
         row.view.setTag(row);
         row.header = row.view.findViewById(R.id.volume_row_header);
@@ -498,7 +498,7 @@ public class VolumeDialogImpl implements VolumeDialog,
                 Events.writeEvent(mContext, Events.EVENT_SETTINGS_CLICK);
                 Intent intent = new Intent(Settings.Panel.ACTION_VOLUME);
                 dismissH(DISMISS_REASON_SETTINGS_CLICKED);
-                Dependency.get(ActivityStarter.class).startActivity(intent,
+                PluginDependency.get(this, ActivityStarter.class).startActivity(intent,
                         true /* dismissShade */);
             });
         }
