@@ -107,7 +107,7 @@
                     android:background="@drawable/ripple_drawable_20dp"
                     android:tint="?android:attr/textColorSecondary"
                     android:soundEffectsEnabled="false"
-                    android:padding="14dp"
+                    android:padding="16dp"
                     android:rotation="90" />
 
             </FrameLayout>

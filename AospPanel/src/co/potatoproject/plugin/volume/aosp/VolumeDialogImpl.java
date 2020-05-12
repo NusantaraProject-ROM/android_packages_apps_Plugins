@@ -31,7 +31,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-import static com.android.systemui.volume.Events.DISMISS_REASON_SETTINGS_CLICKED;
+import static co.potatoproject.plugin.volume.aosp.Events.DISMISS_REASON_SETTINGS_CLICKED;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
@@ -93,7 +93,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.settingslib.Utils;
-import com.android.systemui.Dependency;
 import com.android.systemui.Prefs;
 import com.android.systemui.R;
 import com.android.systemui.plugins.ActivityStarter;
@@ -104,7 +103,6 @@ import com.android.systemui.plugins.VolumeDialogController.State;
 import com.android.systemui.plugins.VolumeDialogController.StreamState;
 import com.android.systemui.plugins.annotations.Requires;
 import com.android.systemui.statusbar.phone.ExpandableIndicator;
-import com.android.systemui.statusbar.policy.DeviceProvisionedControllerImpl;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -139,7 +137,6 @@ public class VolumeDialogImpl implements VolumeDialog {
     private WindowManager.LayoutParams mWindowParams;
     private final H mHandler = new H();
     private VolumeDialogController mController;
-    private DeviceProvisionedControllerImpl mDeviceProvisionedController;
 
     private View mDialog;
     private LinearLayout mDialogView;
@@ -190,7 +187,6 @@ public class VolumeDialogImpl implements VolumeDialog {
         mKeyguard = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         mActivityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         mAccessibilityMgr = mContext.getSystemService(AccessibilityManager.class);
-        mDeviceProvisionedController = new DeviceProvisionedControllerImpl(sysuiContext, mHandler);
         mShowActiveStreamOnly = showActiveStreamOnly();
         mHasSeenODICaptionsTooltip =
                 Prefs.getBoolean(sysuiContext, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, false);
@@ -345,11 +341,13 @@ public class VolumeDialogImpl implements VolumeDialog {
         View main = mDialog.findViewById(R.id.main);
         int[] mainLocation = new int[2];
         main.getLocationOnScreen(mainLocation);
+        int[] dialogLocation = new int[2];
+        mDialogView.getLocationOnScreen(dialogLocation);
         internalInsetsInfo.touchableRegion.set(new Region(
             mainLocation[0],
-            mainLocation[1],
+            dialogLocation[1],
             mainLocation[0] + main.getWidth(),
-            mainLocation[1] + mDialogView.getHeight()
+            dialogLocation[1] + mDialogView.getHeight()
         ));
     };
 
@@ -536,8 +534,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     public void initSettingsH() {
         if (mExpandRowsView != null) {
             mExpandRowsView.setVisibility(
-                    mDeviceProvisionedController.isCurrentUserSetup() &&
-                            mActivityManager.getLockTaskModeState() == LOCK_TASK_MODE_NONE ?
+                    mActivityManager.getLockTaskModeState() == LOCK_TASK_MODE_NONE ?
                             VISIBLE : GONE);
         }
         if (mExpandRows != null) {

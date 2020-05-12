@@ -27,9 +27,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
-import com.android.systemui.statusbar.phone.SystemUIDialog;
-
-abstract public class SafetyWarningDialog extends SystemUIDialog
+abstract public class SafetyWarningDialog extends VolumeDialog
         implements DialogInterface.OnDismissListener, DialogInterface.OnClickListener {
 
     private static final String TAG = Util.logTag(SafetyWarningDialog.class);

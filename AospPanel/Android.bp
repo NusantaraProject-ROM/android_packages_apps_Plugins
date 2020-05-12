@@ -2,13 +2,14 @@ android_app {
 
     name: "AospPanel",
 
-    static_libs: ["SystemUI-libs"],
+    static_libs: ["SystemUI-volumeplugins"],
 
     resource_dirs: ["res"],
 
     certificate: "platform",
     optimize: {
         enabled: false,
+        proguard_flags_files: ["proguard.flags"],
     },
     platform_apis: true,
 
