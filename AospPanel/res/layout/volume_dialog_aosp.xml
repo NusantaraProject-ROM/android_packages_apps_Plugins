@@ -92,6 +92,7 @@
                 android:id="@+id/expandable_indicator_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 android:background="@drawable/rounded_bg_bottom_background">
                 <com.android.systemui.statusbar.phone.ExpandableIndicator
                     android:id="@+id/expandable_indicator"
@@ -100,7 +101,7 @@
                     android:clipToPadding="false"
                     android:clickable="true"
                     android:focusable="true"
-                    android:layout_gravity="right"
+                    android:layout_gravity="left"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:contentDescription="@string/accessibility_quick_settings_expand"
@@ -109,7 +110,21 @@
                     android:soundEffectsEnabled="false"
                     android:padding="16dp"
                     android:rotation="90" />
-
+                    
+                <com.android.keyguard.AlphaOptimizedImageButton
+                    android:id="@+id/media_output"
+                    android:src="@drawable/ic_bluetooth_audio"
+                    android:layout_width="@dimen/volume_dialog_tap_target_size"
+                    android:layout_height="@dimen/volume_dialog_tap_target_size"
+                    android:layout_gravity="right"
+                    android:visibility="gone"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:contentDescription="@string/accessibility_volume_settings"
+                    android:background="@drawable/ripple_drawable_20dp"
+                    android:tint="?android:attr/textColorSecondary"
+                    android:animateLayoutChanges="true"
+                    android:soundEffectsEnabled="false" />
             </FrameLayout>
         </LinearLayout>
 

@@ -31,6 +31,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
+import static com.android.settingslib.media.MediaOutputSliceConstants.ACTION_MEDIA_OUTPUT;
 import static co.potatoproject.plugin.volume.aosp.Events.DISMISS_REASON_SETTINGS_CLICKED;
 
 import android.animation.ObjectAnimator;
@@ -38,6 +39,8 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.KeyguardManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothProfile;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -145,6 +148,8 @@ public class VolumeDialogImpl implements VolumeDialog {
     private ImageButton mRingerIcon;
     private ViewGroup mODICaptionsView;
     private CaptionsToggleImageButton mODICaptionsIcon;
+    private View mMediaOutputView;
+    private ImageButton mMediaOutputIcon;
     private View mExpandRowsView;
     private ExpandableIndicator mExpandRows;
     private FrameLayout mZenIcon;
@@ -272,6 +277,8 @@ public class VolumeDialogImpl implements VolumeDialog {
             mODICaptionsTooltipViewStub = null;
         }
 
+        mMediaOutputIcon = mDialog.findViewById(R.id.media_output);
+
         mExpandRowsView = mDialog.findViewById(R.id.expandable_indicator_container);
         mExpandRows = mDialog.findViewById(R.id.expandable_indicator);
 
@@ -279,28 +286,23 @@ public class VolumeDialogImpl implements VolumeDialog {
                 (LinearLayout.LayoutParams) mDialog.findViewById(R.id.main).getLayoutParams();
         LinearLayout.LayoutParams ringerLP =
                 (LinearLayout.LayoutParams) mRinger.getLayoutParams();
-        FrameLayout.LayoutParams expandRowsLP =
-                (FrameLayout.LayoutParams) mExpandRows.getLayoutParams();
         LinearLayout.LayoutParams captionsLP =
                 (LinearLayout.LayoutParams) mODICaptionsView.getLayoutParams();
 
         if(!isAudioPanelOnLeftSide()) {
             mainLP.gravity = Gravity.RIGHT;
             ringerLP.gravity = Gravity.RIGHT;
-            expandRowsLP.gravity = Gravity.LEFT;
             mExpandRows.setRotation(90);
             captionsLP.gravity = Gravity.RIGHT;
         } else {
             mainLP.gravity = Gravity.LEFT;
             ringerLP.gravity = Gravity.LEFT;
-            expandRowsLP.gravity = Gravity.LEFT;
             mExpandRows.setRotation(-90);
             captionsLP.gravity = Gravity.LEFT;
         }
 
         mDialog.findViewById(R.id.main).setLayoutParams(mainLP);
         mRinger.setLayoutParams(ringerLP);
-        mExpandRows.setLayoutParams(expandRowsLP);
         mODICaptionsView.setLayoutParams(captionsLP);
 
         if (mRows.isEmpty()) {
@@ -513,11 +515,35 @@ public class VolumeDialogImpl implements VolumeDialog {
         }
     }
 
+    private static boolean isBluetoothA2dpConnected() {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()
+                && mBluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP)
+                == BluetoothProfile.STATE_CONNECTED;
+    }
+
+    private void updateOutputSwitcherVisibility() {
+        mMediaOutputIcon.setVisibility(
+                mActivityManager.getLockTaskModeState() == LOCK_TASK_MODE_NONE &&
+                        isBluetoothA2dpConnected() &&
+                                mExpanded ? VISIBLE : GONE);
+    }
+
     public void initSettingsH() {
+        if (mMediaOutputIcon != null) {
+            mMediaOutputIcon.setOnClickListener(v -> {
+                Events.writeEvent(mContext, Events.EVENT_SETTINGS_CLICK);
+                Intent intent = new Intent(ACTION_MEDIA_OUTPUT);
+                dismissH(DISMISS_REASON_SETTINGS_CLICKED);
+                PluginDependency.get(this, ActivityStarter.class).startActivity(intent,
+                        true /* dismissShade */);
+            });
+        }
         if (mExpandRowsView != null) {
             mExpandRowsView.setVisibility(
                     mActivityManager.getLockTaskModeState() == LOCK_TASK_MODE_NONE ?
                             VISIBLE : GONE);
+            updateOutputSwitcherVisibility();
         }
         if (mExpandRows != null) {
             mExpandRows.setOnLongClickListener(v -> {
@@ -538,9 +564,11 @@ public class VolumeDialogImpl implements VolumeDialog {
                             R.drawable.ic_volume_alarm_mute, true, false);
                     updateAllActiveRows();
                     mExpanded = true;
+                    updateOutputSwitcherVisibility();
                 } else {
                     cleanExpandedRows();
                     mExpanded = false;
+                    updateOutputSwitcherVisibility();
                 }
                 mExpandRows.setExpanded(mExpanded);
             });
