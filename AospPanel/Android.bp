@@ -2,7 +2,7 @@ android_app {
 
     name: "AospPanel",
 
-    static_libs: ["SystemUI-volumeplugins"],
+    static_libs: ["SystemUI-libs"],
 
     resource_dirs: ["res"],
 
