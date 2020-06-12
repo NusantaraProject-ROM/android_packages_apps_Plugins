@@ -38,6 +38,8 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.KeyguardManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothProfile;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -54,7 +56,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
-import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.media.AudioSystem;
 import android.os.Debug;
@@ -137,8 +138,6 @@ public class VolumeDialogImpl implements VolumeDialog,
     private Context mContext;
     private final H mHandler = new H();
     private VolumeDialogController mController;
-    private AudioManager mAudio;
-
     private Window mWindow;
     private CustomDialog mDialog;
     private ViewGroup mDialogView;
@@ -198,7 +197,6 @@ public class VolumeDialogImpl implements VolumeDialog,
         mHasSeenODICaptionsTooltip =
                 Prefs.getBoolean(sysuiContext, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, false);
         mLeftVolumeRocker = mContext.getResources().getBoolean(R.bool.config_audioPanelOnLeftSide);
-        mAudio = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
     }
 
     public void init(int windowType, Callback callback) {
@@ -648,7 +646,6 @@ public class VolumeDialogImpl implements VolumeDialog,
     private void updateSwitchStreamButtonsH(StreamSwitchButton button) {
         mPrevActiveStream = mActiveStream;
         mActiveStream = button.stream;
-        mAudio.forceVolumeControlStream(button.stream);
         updateRowsH(getActiveRow());
         updateSwitchButtonsVisibility(getActiveRow());
 
@@ -680,6 +677,13 @@ public class VolumeDialogImpl implements VolumeDialog,
         }
     }
 
+    private static boolean isBluetoothA2dpConnected() {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()
+                && mBluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP)
+                == BluetoothProfile.STATE_CONNECTED;
+    }
+
     public void initOutputSwitcherH() {
         if (mOutputSwitcher != null) {
             mOutputSwitcher.setVisibility(
@@ -695,9 +699,7 @@ public class VolumeDialogImpl implements VolumeDialog,
                         true /* dismissShade */);
             });
 
-            AudioDeviceInfo[] adi = mAudio.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
-
-            if(adi.length > 3)
+            if(isBluetoothA2dpConnected())
                 mOSIcon.setEnabled(true);
             else mOSIcon.setEnabled(false);
         }
