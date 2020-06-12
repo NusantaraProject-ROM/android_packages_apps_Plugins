@@ -1214,7 +1214,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         final StreamState ss = mState.states.get(row.stream);
         if (ss == null) return;
         row.ss = ss;
-        if (ss.level > 0) {
+        if (ss.level > ss.levelMin) {
             row.lastAudibleLevel = ss.level;
         }
         if (ss.level == row.requestedLevel) {
@@ -1225,6 +1225,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         final boolean isSystemStream = row.stream == AudioManager.STREAM_SYSTEM;
         final boolean isAlarmStream = row.stream == STREAM_ALARM;
         final boolean isMusicStream = row.stream == AudioManager.STREAM_MUSIC;
+        final boolean isMuted = row.ss.level == row.ss.levelMin;
         final boolean isRingVibrate = isRingStream
                 && mState.ringerModeInternal == AudioManager.RINGER_MODE_VIBRATE;
         final boolean isRingSilent = isRingStream
@@ -1267,7 +1268,7 @@ public class VolumeDialogImpl implements VolumeDialog,
                         (ss.muted ? R.drawable.ic_volume_media_bt_mute
                                 : R.drawable.ic_volume_media_bt)
                 : mAutomute && ss.level == 0 ? row.iconMuteRes
-                : (ss.muted ? row.iconMuteRes : row.iconRes);
+                : isMuted ? row.iconMuteRes : row.iconRes;
         row.icon.setImageResource(iconRes);
         row.iconState =
                 iconRes == R.drawable.ic_volume_ringer_vibrate ? Events.ICON_STATE_VIBRATE
@@ -1680,7 +1681,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         private int iconState;  // from Events
         private ObjectAnimator anim;  // slider progress animation for non-touch-related updates
         private int animTargetProgress;
-        private int lastAudibleLevel = 1;
+        private int lastAudibleLevel = 2;
         private FrameLayout dndIcon;
     }
 

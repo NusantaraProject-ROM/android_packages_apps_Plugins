@@ -616,28 +616,12 @@ public class VolumeDialogImpl implements VolumeDialog,
         });
 
         button.icon.setOnLongClickListener(v -> {
-            if (button.stream == AudioManager.STREAM_RING) {
-                final boolean hasVibrator = mController.hasVibrator();
-                if (mState.ringerModeInternal == AudioManager.RINGER_MODE_NORMAL) {
-                    if (hasVibrator) {
-                        mController.setRingerMode(AudioManager.RINGER_MODE_VIBRATE, false);
-                    } else {
-                        final boolean wasZero = row.ss.level == 0;
-                        mController.setStreamVolume(button.stream,
-                                wasZero ? row.lastAudibleLevel : 0);
-                    }
-                } else {
-                    mController.setRingerMode(AudioManager.RINGER_MODE_NORMAL, false);
-                    if (button.row.ss.level == 0) {
-                        mController.setStreamVolume(stream, 1);
-                    }
-                }
-            } else {
-                final boolean vmute = button.row.ss.level == button.row.ss.levelMin;
-                mController.setStreamVolume(button.stream,
-                        vmute ? button.row.lastAudibleLevel : button.row.ss.levelMin);
-            }
+            final boolean vmute = button.row.ss.level == button.row.ss.levelMin;
+            mController.setStreamVolume(button.stream,
+                    vmute ? button.row.lastAudibleLevel : button.row.ss.levelMin);
             button.row.userAttempt = 0;
+            mActiveStreamManuallyModified = true;
+            updateSwitchStreamButtonsH(button);
 
             return true;
         });
@@ -1192,9 +1176,13 @@ public class VolumeDialogImpl implements VolumeDialog,
         }
 
         if (mActiveStream != state.activeStream) {
+            VolumeRow activeRow = getActiveButton().row;
             mPrevActiveStream = mActiveStream;
-            mActiveStream = state.activeStream;
-            VolumeRow activeRow = getActiveRow();
+            if(!mActiveStreamManuallyModified) {
+                mActiveStream = state.activeStream;
+            } else {
+                mActiveStream = activeRow.stream;
+            }
             updateRowsH(activeRow);
             if(!mActiveStreamManuallyModified)
                 updateSwitchStreamButtonsH(getActiveButton());
@@ -1228,6 +1216,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         final boolean isSystemStream = row.stream == AudioManager.STREAM_SYSTEM;
         final boolean isAlarmStream = row.stream == STREAM_ALARM;
         final boolean isMusicStream = row.stream == AudioManager.STREAM_MUSIC;
+        final boolean isMuted = row.ss.level == row.ss.levelMin;
         final boolean isRingVibrate = isRingStream
                 && mState.ringerModeInternal == AudioManager.RINGER_MODE_VIBRATE;
         final boolean isRingSilent = isRingStream
@@ -1270,7 +1259,7 @@ public class VolumeDialogImpl implements VolumeDialog,
                         (ss.muted ? R.drawable.ic_volume_media_bt_mute
                                 : R.drawable.ic_volume_media_bt)
                 : mAutomute && ss.level == 0 ? row.iconMuteRes
-                : (ss.muted ? row.iconMuteRes : row.iconRes);
+                : isMuted ? row.iconMuteRes : row.iconRes;
         row.icon.setImageResource(iconRes);
         if(button.icon != null)
             button.icon.setImageResource(iconRes);
@@ -1713,7 +1702,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         private int iconState;  // from Events
         private ObjectAnimator anim;  // slider progress animation for non-touch-related updates
         private int animTargetProgress;
-        private int lastAudibleLevel = 1;
+        private int lastAudibleLevel = 2;
         private FrameLayout dndIcon;
     }
 
