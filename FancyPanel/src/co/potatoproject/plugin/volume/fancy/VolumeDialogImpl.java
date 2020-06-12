@@ -30,6 +30,7 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import static com.android.settingslib.media.MediaOutputSliceConstants.ACTION_MEDIA_OUTPUT;
 import static com.android.systemui.volume.Events.DISMISS_REASON_SETTINGS_CLICKED;
 
 import android.animation.ObjectAnimator;
@@ -37,6 +38,8 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.KeyguardManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothProfile;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -148,7 +151,10 @@ public class VolumeDialogImpl implements VolumeDialog,
     private ImageButton mRingerIcon;
     private ViewGroup mODICaptionsView;
     private CaptionsToggleImageButton mODICaptionsIcon;
-    private View mButtonsGroup;
+    private View mMediaOutputContainer;
+    private ImageButton mMediaOutputIcon;
+    private LinearLayout mButtonsGroup;
+    private View mExtraButtons;
     private View mExpandRowsView;
     private ExpandableIndicator mExpandRows;
     private FrameLayout mZenIcon;
@@ -268,6 +274,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         }
 
         mButtonsGroup = mDialog.findViewById(R.id.buttons_group);
+        mExtraButtons = mDialog.findViewById(R.id.extra_buttons);
 
         mODICaptionsView = mDialog.findViewById(R.id.odi_captions);
         if (mODICaptionsView != null) {
@@ -278,6 +285,9 @@ public class VolumeDialogImpl implements VolumeDialog,
             mDialogView.removeView(mODICaptionsTooltipViewStub);
             mODICaptionsTooltipViewStub = null;
         }
+
+        mMediaOutputContainer = mDialog.findViewById(R.id.media_output_container);
+        mMediaOutputIcon = mDialog.findViewById(R.id.media_output);
 
         mExpandRowsView = mDialog.findViewById(R.id.expandable_indicator_container);
         mExpandRows = mDialog.findViewById(R.id.expandable_indicator);
@@ -319,6 +329,8 @@ public class VolumeDialogImpl implements VolumeDialog,
             buttonsGroupLP.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
             mExpandRows.setRotation(90);
         } else {
+            mButtonsGroup.removeViewAt(0);
+            mButtonsGroup.addView(mExtraButtons, 1);
             mainFrameLP.gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
             buttonsGroupLP.gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
             mExpandRows.setRotation(-90);
@@ -528,12 +540,20 @@ public class VolumeDialogImpl implements VolumeDialog,
         }
     }
 
+    private static boolean isBluetoothA2dpConnected() {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()
+                && mBluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP)
+                == BluetoothProfile.STATE_CONNECTED;
+    }
+
     public void initSettingsH() {
         if (mExpandRowsView != null) {
             mExpandRowsView.setVisibility(
                     mActivityManager.getLockTaskModeState() == LOCK_TASK_MODE_NONE ?
                             VISIBLE : GONE);
         }
+
         if (mExpandRows != null) {
             mExpandRows.setOnLongClickListener(v -> {
                 rescheduleTimeoutH();
@@ -560,6 +580,22 @@ public class VolumeDialogImpl implements VolumeDialog,
                     updatePanelOnMode();
                 }
                 mExpandRows.setExpanded(mPanelMode == PanelMode.EXPANDED);
+            });
+        }
+
+        if (mMediaOutputContainer != null) {
+            mMediaOutputContainer.setVisibility(
+                    mActivityManager.getLockTaskModeState() == LOCK_TASK_MODE_NONE &&
+                            isBluetoothA2dpConnected() ? VISIBLE : GONE);
+        }
+        
+        if (mMediaOutputIcon != null) {
+            mMediaOutputIcon.setOnClickListener(v -> {
+                Events.writeEvent(mContext, Events.EVENT_SETTINGS_CLICK);
+                Intent intent = new Intent(ACTION_MEDIA_OUTPUT);
+                dismissH(DISMISS_REASON_SETTINGS_CLICKED);
+                PluginDependency.get(this, ActivityStarter.class).startActivity(intent,
+                        true /* dismissShade */);
             });
         }
     }
@@ -699,25 +735,46 @@ public class VolumeDialogImpl implements VolumeDialog,
         LinearLayout main = (LinearLayout) mDialog.findViewById(R.id.main);
         View fakePadding = mDialog.findViewById(R.id.fake_padding);
 
-        ViewPropertyAnimator animator = mButtonsGroup.animate()
+        ViewPropertyAnimator buttonsAnimator = mButtonsGroup.animate()
                 .alpha(1)
                 .setDuration(350)
                 .setInterpolator(new SystemUIInterpolators.LogAccelerateInterpolator());
+
+        ViewPropertyAnimator extraAnimator = mExtraButtons.animate()
+                .setDuration(250)
+                .setInterpolator(new SystemUIInterpolators.LogAccelerateInterpolator())
+                .withStartAction(() -> {
+                    if(mode == PanelMode.EXPANDED) {
+                        mExtraButtons.setVisibility(VISIBLE);
+                    }
+                })
+                .withEndAction(() -> {
+                    if(mode != PanelMode.EXPANDED) {
+                        mExtraButtons.setVisibility(GONE);
+                    }
+                });
         int rowSidePadding = mContext.getResources().getDimensionPixelSize(R.dimen.volume_dialog_row_side_padding);
 
         if(mode != PanelMode.MINI) {
+            if(mode == PanelMode.EXPANDED) {
+                extraAnimator.alpha(1);
+            } else if(mode == PanelMode.COLLAPSED) {
+                extraAnimator.alpha(0);
+            }
             main.setMinimumWidth(mContext.getResources().getDimensionPixelSize(R.dimen.volume_dialog_panel_width));
             mButtonsGroup.setVisibility(VISIBLE);
             mDialogRowsView.setPadding(rowSidePadding, 0, rowSidePadding, 0);
             fakePadding.setVisibility(GONE);
-            animator.start();
+            buttonsAnimator.start();
         } else {
             main.setMinimumWidth(mContext.getResources().getDimensionPixelSize(R.dimen.volume_dialog_panel_mini_width));
             mButtonsGroup.setVisibility(INVISIBLE);
+            mExtraButtons.setVisibility(GONE);
             mDialogRowsView.setPadding(0, 0, 0, 0);
             fakePadding.setVisibility(VISIBLE);
             mButtonsGroup.setAlpha(0);
-            animator.alpha(0);
+            mExtraButtons.setAlpha(0);
+            buttonsAnimator.alpha(0);
         }
     }
 
