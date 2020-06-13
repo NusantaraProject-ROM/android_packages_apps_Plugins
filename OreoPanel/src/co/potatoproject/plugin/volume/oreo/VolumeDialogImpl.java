@@ -162,7 +162,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         mAccessibilityMgr =
                 (AccessibilityManager) mContext.getSystemService(Context.ACCESSIBILITY_SERVICE);
         mActiveSliderTint = ColorStateList.valueOf(Utils.getColorAccentDefaultColor(mContext));
-        mInactiveSliderTint = loadColorStateList(R.color.volume_slider_inactive);
+        mInactiveSliderTint = loadColorStateList(co.potatoproject.plugin.volume.oreo.R.color.volume_slider_inactive);
     }
 
     public void init(int windowType, Callback callback) {
@@ -216,7 +216,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         mWindow.setAttributes(lp);
         mWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
-        mDialog.setContentView(R.layout.volume_dialog_oreo);
+        mDialog.setContentView(co.potatoproject.plugin.volume.oreo.R.layout.volume_dialog_oreo);
         mDialogView = (ViewGroup) mDialog.findViewById(R.id.volume_dialog);
         mDialogView.setOnHoverListener(new View.OnHoverListener() {
             @Override
@@ -229,10 +229,10 @@ public class VolumeDialogImpl implements VolumeDialog,
             }
         });
 
-        mDialogContentView = mDialog.findViewById(R.id.volume_dialog_content);
+        mDialogContentView = mDialog.findViewById(co.potatoproject.plugin.volume.oreo.R.id.volume_dialog_content);
         mDialogRowsView = mDialogContentView.findViewById(R.id.volume_dialog_rows);
         mExpanded = false;
-        mExpandButton = (ExpandableIndicator) mDialogView.findViewById(R.id.volume_expand_button);
+        mExpandButton = (ExpandableIndicator) mDialogView.findViewById(co.potatoproject.plugin.volume.oreo.R.id.volume_expand_button);
         mExpandButton.setOnClickListener(mClickExpand);
 
         mExpandButton.setVisibility(
@@ -261,9 +261,9 @@ public class VolumeDialogImpl implements VolumeDialog,
                     R.drawable.ic_volume_media, R.drawable.ic_volume_media_mute, true);
             if (!AudioSystem.isSingleVolume(mContext)) {
                 addRow(AudioManager.STREAM_RING,
-                        R.drawable.ic_volume_ringer, R.drawable.ic_volume_ringer_mute_oreo, true);
+                        R.drawable.ic_volume_ringer, co.potatoproject.plugin.volume.oreo.R.drawable.ic_volume_ringer_mute_oreo, true);
                 addRow(AudioManager.STREAM_ALARM,
-                        R.drawable.ic_volume_alarm, R.drawable.ic_volume_alarm_mute_oreo, true);
+                        R.drawable.ic_volume_alarm, co.potatoproject.plugin.volume.oreo.R.drawable.ic_volume_alarm_mute_oreo, true);
                 addRow(AudioManager.STREAM_VOICE_CALL,
                         R.drawable.ic_volume_voice, R.drawable.ic_volume_voice, false);
                 addRow(AudioManager.STREAM_BLUETOOTH_SCO,
@@ -291,7 +291,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         if (D.BUG) Log.d(TAG, "updateWindowWidth dm.w=" + dm.widthPixels);
         int w = dm.widthPixels;
         final int max = mContext.getResources()
-                .getDimensionPixelSize(R.dimen.volume_dialog_oreo_panel_width);
+                .getDimensionPixelSize(co.potatoproject.plugin.volume.oreo.R.dimen.volume_dialog_oreo_panel_width);
         if (w > max) {
             w = max;
         }
@@ -396,7 +396,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         row.iconRes = iconRes;
         row.iconMuteRes = iconMuteRes;
         row.important = important;
-        row.view = mDialog.getLayoutInflater().inflate(R.layout.volume_dialog_oreo_row, null);
+        row.view = mDialog.getLayoutInflater().inflate(co.potatoproject.plugin.volume.oreo.R.layout.volume_dialog_oreo_row, null);
         row.view.setId(row.stream);
         row.view.setTag(row);
         row.header = (TextView) row.view.findViewById(R.id.volume_row_header);
@@ -525,7 +525,7 @@ public class VolumeDialogImpl implements VolumeDialog,
             event.setPackageName(mContext.getPackageName());
             event.setClassName(CustomDialog.class.getSuperclass().getName());
             event.getText().add(mContext.getString(
-                    R.string.volume_dialog_accessibility_dismissed_message));
+                    co.potatoproject.plugin.volume.oreo.R.string.volume_dialog_accessibility_dismissed_message));
             mAccessibilityMgr.sendAccessibilityEvent(event);
         }
         Events.writeEvent(mContext, Events.EVENT_DISMISS_DIALOG, reason);
@@ -1136,7 +1136,7 @@ public class VolumeDialogImpl implements VolumeDialog,
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                 if (mShowing) {
                     event.getText().add(mContext.getString(
-                            R.string.volume_dialog_accessibility_shown_message,
+                            co.potatoproject.plugin.volume.oreo.R.string.volume_dialog_accessibility_shown_message,
                             getStreamLabelH(getActiveRow().stream)));
                     return true;
                 }

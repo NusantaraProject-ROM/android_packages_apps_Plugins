@@ -231,7 +231,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         mWindowParams.type = WindowManager.LayoutParams.TYPE_VOLUME_OVERLAY;
         mWindowParams.format = PixelFormat.TRANSLUCENT;
         mWindowParams.windowAnimations = -1;
-        mDialog = LayoutInflater.from(mContext).inflate(R.layout.volume_dialog_extended, (ViewGroup) null, false);
+        mDialog = LayoutInflater.from(mContext).inflate(co.potatoproject.plugin.volume.extended.R.layout.volume_dialog_extended, (ViewGroup) null, false);
 
         mDialog.setOnTouchListener((v, event) -> {
             if (mShowing) {
@@ -276,8 +276,8 @@ public class VolumeDialogImpl implements VolumeDialog,
             mODICaptionsTooltipViewStub = null;
         }
 
-        mExpandRowsView = mDialog.findViewById(R.id.expandable_indicator_container);
-        mExpandRows = mDialog.findViewById(R.id.expandable_indicator);
+        mExpandRowsView = mDialog.findViewById(co.potatoproject.plugin.volume.extended.R.id.expandable_indicator_container);
+        mExpandRows = mDialog.findViewById(co.potatoproject.plugin.volume.extended.R.id.expandable_indicator);
 
         if (mRows.isEmpty()) {
             if (!AudioSystem.isSingleVolume(mContext)) {
@@ -449,7 +449,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         row.iconMuteRes = iconMuteRes;
         row.important = important;
         row.defaultStream = defaultStream;
-        row.view = LayoutInflater.from(mContext).inflate(R.layout.volume_dialog_extended_row, null);
+        row.view = LayoutInflater.from(mContext).inflate(co.potatoproject.plugin.volume.extended.R.layout.volume_dialog_extended_row, null);
         row.view.setId(row.stream);
         row.view.setTag(row);
         row.header = row.view.findViewById(R.id.volume_row_header);
@@ -467,8 +467,8 @@ public class VolumeDialogImpl implements VolumeDialog,
         row.icon.setImageResource(iconRes);
         row.icon.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         row.icon.setClickable(false);
-        ColorStateList mIconTint = ColorStateList.valueOf(mContext.getResources().getColor(R.color.row_icon_dark));
-        ColorStateList mIconTintNormal = ColorStateList.valueOf(mContext.getResources().getColor(R.color.row_icon_white));
+        ColorStateList mIconTint = ColorStateList.valueOf(mContext.getResources().getColor(co.potatoproject.plugin.volume.extended.R.color.row_icon_dark));
+        ColorStateList mIconTintNormal = ColorStateList.valueOf(mContext.getResources().getColor(co.potatoproject.plugin.volume.extended.R.color.row_icon_white));
         int rowprogress = row.slider.getProgress();
         if (rowprogress < 500) {
             row.icon.setImageTintList(mIconTint);
@@ -883,8 +883,8 @@ public class VolumeDialogImpl implements VolumeDialog,
             }
             if (row.view.isShown()) {
                 updateVolumeRowTintH(row, isActive);
-                ColorStateList mIconTint = ColorStateList.valueOf(mContext.getResources().getColor(R.color.row_icon_dark));
-                ColorStateList mIconTintNormal = ColorStateList.valueOf(mContext.getResources().getColor(R.color.row_icon_white));
+                ColorStateList mIconTint = ColorStateList.valueOf(mContext.getResources().getColor(co.potatoproject.plugin.volume.extended.R.color.row_icon_dark));
+                ColorStateList mIconTintNormal = ColorStateList.valueOf(mContext.getResources().getColor(co.potatoproject.plugin.volume.extended.R.color.row_icon_white));
                 int rowprogress = row.slider.getProgress();
                 if (rowprogress < 500) {
                     row.icon.setImageTintList(mIconTint);
@@ -902,9 +902,9 @@ public class VolumeDialogImpl implements VolumeDialog,
                 return;
             }
 
-            ColorStateList ringerbackgroundnormal = mContext.getResources().getColorStateList(R.color.ringer_bcg_normal);
-            int RingerMuteT = mContext.getResources().getColor(R.color.ringer_icon_mute);
-            int RingerNormalT = mContext.getResources().getColor(R.color.ringer_icon_normal);
+            ColorStateList ringerbackgroundnormal = mContext.getResources().getColorStateList(co.potatoproject.plugin.volume.extended.R.color.ringer_bcg_normal);
+            int RingerMuteT = mContext.getResources().getColor(co.potatoproject.plugin.volume.extended.R.color.ringer_icon_mute);
+            int RingerNormalT = mContext.getResources().getColor(co.potatoproject.plugin.volume.extended.R.color.ringer_icon_normal);
 
             boolean isZenMuted = mState.zenMode == Global.ZEN_MODE_ALARMS
                     || mState.zenMode == Global.ZEN_MODE_NO_INTERRUPTIONS
@@ -1231,8 +1231,8 @@ public class VolumeDialogImpl implements VolumeDialog,
                 }
                 row.slider.setProgress(newProgress, true);
             }
-            ColorStateList mIconTint = ColorStateList.valueOf(mContext.getResources().getColor(R.color.row_icon_dark));
-            ColorStateList mIconTintNormal = ColorStateList.valueOf(mContext.getResources().getColor(R.color.row_icon_white));
+            ColorStateList mIconTint = ColorStateList.valueOf(mContext.getResources().getColor(co.potatoproject.plugin.volume.extended.R.color.row_icon_dark));
+            ColorStateList mIconTintNormal = ColorStateList.valueOf(mContext.getResources().getColor(co.potatoproject.plugin.volume.extended.R.color.row_icon_white));
             if (newProgress < 500) {
                 row.icon.setImageTintList(mIconTint);
             } else {
@@ -1449,8 +1449,8 @@ public class VolumeDialogImpl implements VolumeDialog,
                             userLevel);
                 }
             }
-            ColorStateList mIconTint = ColorStateList.valueOf(mContext.getResources().getColor(R.color.row_icon_dark));
-            ColorStateList mIconTintNormal = ColorStateList.valueOf(mContext.getResources().getColor(R.color.row_icon_white));
+            ColorStateList mIconTint = ColorStateList.valueOf(mContext.getResources().getColor(co.potatoproject.plugin.volume.extended.R.color.row_icon_dark));
+            ColorStateList mIconTintNormal = ColorStateList.valueOf(mContext.getResources().getColor(co.potatoproject.plugin.volume.extended.R.color.row_icon_white));
             if (progress < 500) {
                 mRow.icon.setImageTintList(mIconTint);
             } else {

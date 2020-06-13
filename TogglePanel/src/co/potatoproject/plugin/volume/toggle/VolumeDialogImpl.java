@@ -245,7 +245,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         mWindow.setAttributes(lp);
         mWindow.setLayout(WRAP_CONTENT, WRAP_CONTENT);
 
-        mDialog.setContentView(R.layout.volume_dialog_toggle);
+        mDialog.setContentView(co.potatoproject.plugin.volume.toggle.R.layout.volume_dialog_toggle);
         mDialogView = mDialog.findViewById(R.id.volume_dialog);
         mDialogView.setAlpha(0);
         mDialog.setCanceledOnTouchOutside(true);
@@ -279,11 +279,11 @@ public class VolumeDialogImpl implements VolumeDialog,
             return true;
         });
 
-        mColumnHolder = mDialog.findViewById(R.id.column_holder);
+        mColumnHolder = mDialog.findViewById(co.potatoproject.plugin.volume.toggle.R.id.column_holder);
 
         mDialogRowsView = mDialog.findViewById(R.id.volume_dialog_rows);
-        mTopButtons = mDialog.findViewById(R.id.top_buttons);
-        mOutputSwitcher = mDialog.findViewById(R.id.output_switcher);
+        mTopButtons = mDialog.findViewById(co.potatoproject.plugin.volume.toggle.R.id.top_buttons);
+        mOutputSwitcher = mDialog.findViewById(co.potatoproject.plugin.volume.toggle.R.id.output_switcher);
         mRinger = mDialog.findViewById(R.id.ringer);
 
         if(mTopButtons != null) {
@@ -302,9 +302,9 @@ public class VolumeDialogImpl implements VolumeDialog,
         }
 
         if(mOutputSwitcher != null)
-            mOSIcon = mDialog.findViewById(R.id.os_icon);
+            mOSIcon = mDialog.findViewById(co.potatoproject.plugin.volume.toggle.R.id.os_icon);
 
-        mSwitchStreamColumn = mDialog.findViewById(R.id.stream_switch);
+        mSwitchStreamColumn = mDialog.findViewById(co.potatoproject.plugin.volume.toggle.R.id.stream_switch);
 
         if(isAudioPanelOnLeftSide()) {
             mColumnHolder.removeViewAt(0);
@@ -313,7 +313,7 @@ public class VolumeDialogImpl implements VolumeDialog,
             mTopButtons.addView(mOutputSwitcher, 1);
         }
 
-        mSwitchStreamButtons = mDialog.findViewById(R.id.volume_dialog_stream_buttons);
+        mSwitchStreamButtons = mDialog.findViewById(co.potatoproject.plugin.volume.toggle.R.id.volume_dialog_stream_buttons);
 
         mODICaptionsView = mDialog.findViewById(R.id.odi_captions);
         if (mODICaptionsView != null) {
@@ -512,7 +512,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         row.iconMuteRes = iconMuteRes;
         row.important = important;
         row.defaultStream = defaultStream;
-        row.view = mDialog.getLayoutInflater().inflate(R.layout.volume_dialog_toggle_row, null);
+        row.view = mDialog.getLayoutInflater().inflate(co.potatoproject.plugin.volume.toggle.R.layout.volume_dialog_toggle_row, null);
         row.view.setId(row.stream);
         row.view.setTag(row);
         row.header = row.view.findViewById(R.id.volume_row_header);
@@ -562,7 +562,7 @@ public class VolumeDialogImpl implements VolumeDialog,
 
     private Drawable getSwitchStreamSelectedDrawable() {
         RippleDrawable rippleDrawable = (RippleDrawable)
-            mContext.getDrawable(R.drawable.rounded_ripple_selected);
+            mContext.getDrawable(co.potatoproject.plugin.volume.toggle.R.drawable.rounded_ripple_selected);
 
         GradientDrawable bgDrawable = new GradientDrawable();
             
@@ -603,7 +603,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         button.iconRes = iconRes;
         button.iconMuteRes = iconMuteRes;
 
-        button.view = mDialog.getLayoutInflater().inflate(R.layout.volume_dialog_toggle_stream_button, null);
+        button.view = mDialog.getLayoutInflater().inflate(co.potatoproject.plugin.volume.toggle.R.layout.volume_dialog_toggle_stream_button, null);
         button.view.setId(stream);
         button.view.setTag(button);
 

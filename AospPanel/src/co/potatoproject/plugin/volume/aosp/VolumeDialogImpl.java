@@ -232,7 +232,8 @@ public class VolumeDialogImpl implements VolumeDialog {
                 mWindowParams.type = WindowManager.LayoutParams.TYPE_VOLUME_OVERLAY;
         mWindowParams.format = PixelFormat.TRANSLUCENT;
         mWindowParams.windowAnimations = -1;
-        mDialog = LayoutInflater.from(mContext).inflate(R.layout.volume_dialog_aosp, (ViewGroup) null, false);
+        mDialog = LayoutInflater.from(mContext).inflate(co.potatoproject.plugin.volume.aosp.R.layout.volume_dialog_aosp,
+                        (ViewGroup) null, false);
 
         mDialog.setOnTouchListener((v, event) -> {
             if (mShowing) {
@@ -244,7 +245,7 @@ public class VolumeDialogImpl implements VolumeDialog {
             return false;
         });
 
-        mDialogView = mDialog.findViewById(R.id.volume_dialog);
+        mDialogView = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.volume_dialog);
         mDialogView.setAlpha(0);
 
         mDialogView.setOnHoverListener((v, event) -> {
@@ -260,11 +261,11 @@ public class VolumeDialogImpl implements VolumeDialog {
         dialogViewLP.gravity = Gravity.CENTER_VERTICAL;
         mDialogView.setLayoutParams(dialogViewLP);
 
-        mDialogRowsView = mDialog.findViewById(R.id.volume_dialog_rows);
-        mRinger = mDialog.findViewById(R.id.ringer);
+        mDialogRowsView = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.volume_dialog_rows);
+        mRinger = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.ringer);
         if (mRinger != null) {
-            mRingerIcon = mRinger.findViewById(R.id.ringer_icon);
-            mZenIcon = mRinger.findViewById(R.id.dnd_icon);
+            mRingerIcon = mRinger.findViewById(co.potatoproject.plugin.volume.aosp.R.id.ringer_icon);
+            mZenIcon = mRinger.findViewById(co.potatoproject.plugin.volume.aosp.R.id.dnd_icon);
         }
 
         mODICaptionsView = mDialog.findViewById(R.id.odi_captions);
@@ -277,10 +278,10 @@ public class VolumeDialogImpl implements VolumeDialog {
             mODICaptionsTooltipViewStub = null;
         }
 
-        mMediaOutputIcon = mDialog.findViewById(R.id.media_output);
+        mMediaOutputIcon = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.media_output);
 
-        mExpandRowsView = mDialog.findViewById(R.id.expandable_indicator_container);
-        mExpandRows = mDialog.findViewById(R.id.expandable_indicator);
+        mExpandRowsView = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.expandable_indicator_container);
+        mExpandRows = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.expandable_indicator);
 
         LinearLayout.LayoutParams mainLP =
                 (LinearLayout.LayoutParams) mDialog.findViewById(R.id.main).getLayoutParams();
@@ -485,7 +486,7 @@ public class VolumeDialogImpl implements VolumeDialog {
         row.iconMuteRes = iconMuteRes;
         row.important = important;
         row.defaultStream = defaultStream;
-        row.view = LayoutInflater.from(mContext).inflate(R.layout.volume_dialog_aosp_row, null);
+        row.view = LayoutInflater.from(mContext).inflate(co.potatoproject.plugin.volume.aosp.R.layout.volume_dialog_aosp_row, null);
         row.view.setId(row.stream);
         row.view.setTag(row);
         row.header = row.view.findViewById(R.id.volume_row_header);
