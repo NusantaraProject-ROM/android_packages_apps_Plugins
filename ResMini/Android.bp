@@ -1,0 +1,9 @@
+android_library {
+    name: "ResMini",
+    resource_dirs: [
+        "res",
+    ],
+    manifest: "AndroidManifest.xml",
+
+    aaptflags: ["--auto-add-overlay"],
+}
