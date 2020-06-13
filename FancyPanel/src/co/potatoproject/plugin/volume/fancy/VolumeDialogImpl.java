@@ -238,7 +238,8 @@ public class VolumeDialogImpl implements VolumeDialog,
         mWindowParams.type = WindowManager.LayoutParams.TYPE_VOLUME_OVERLAY;
         mWindowParams.format = PixelFormat.TRANSLUCENT;
         mWindowParams.windowAnimations = -1;
-        mDialog = LayoutInflater.from(mContext).inflate(R.layout.volume_dialog_fancy, (ViewGroup) null, false);
+        mDialog = LayoutInflater.from(mContext).inflate(co.potatoproject.plugin.volume.fancy.R.layout.volume_dialog_fancy,
+                        (ViewGroup) null, false);
         
         mDialog.setOnTouchListener((v, event) -> {
             if (mShowing) {
@@ -273,8 +274,8 @@ public class VolumeDialogImpl implements VolumeDialog,
             mZenIcon = mRinger.findViewById(R.id.dnd_icon);
         }
 
-        mButtonsGroup = mDialog.findViewById(R.id.buttons_group);
-        mExtraButtons = mDialog.findViewById(R.id.extra_buttons);
+        mButtonsGroup = mDialog.findViewById(co.potatoproject.plugin.volume.fancy.R.id.buttons_group);
+        mExtraButtons = mDialog.findViewById(co.potatoproject.plugin.volume.fancy.R.id.extra_buttons);
 
         mODICaptionsView = mDialog.findViewById(R.id.odi_captions);
         if (mODICaptionsView != null) {
@@ -286,11 +287,11 @@ public class VolumeDialogImpl implements VolumeDialog,
             mODICaptionsTooltipViewStub = null;
         }
 
-        mMediaOutputContainer = mDialog.findViewById(R.id.media_output_container);
-        mMediaOutputIcon = mDialog.findViewById(R.id.media_output);
+        mMediaOutputContainer = mDialog.findViewById(co.potatoproject.plugin.volume.fancy.R.id.media_output_container);
+        mMediaOutputIcon = mDialog.findViewById(co.potatoproject.plugin.volume.fancy.R.id.media_output);
 
-        mExpandRowsView = mDialog.findViewById(R.id.expandable_indicator_container);
-        mExpandRows = mDialog.findViewById(R.id.expandable_indicator);
+        mExpandRowsView = mDialog.findViewById(co.potatoproject.plugin.volume.fancy.R.id.expandable_indicator_container);
+        mExpandRows = mDialog.findViewById(co.potatoproject.plugin.volume.fancy.R.id.expandable_indicator);
 
         if (mRows.isEmpty()) {
             if (!AudioSystem.isSingleVolume(mContext)) {
@@ -319,7 +320,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         FrameLayout.LayoutParams dialogViewLP =
                 (FrameLayout.LayoutParams) mDialogView.getLayoutParams();
         LinearLayout.LayoutParams mainFrameLP =
-                (LinearLayout.LayoutParams) mDialog.findViewById(R.id.main_frame).getLayoutParams();
+                (LinearLayout.LayoutParams) mDialog.findViewById(co.potatoproject.plugin.volume.fancy.R.id.main_frame).getLayoutParams();
         LinearLayout.LayoutParams buttonsGroupLP =
                 (LinearLayout.LayoutParams) mButtonsGroup.getLayoutParams();
 
@@ -336,7 +337,7 @@ public class VolumeDialogImpl implements VolumeDialog,
             mExpandRows.setRotation(-90);
         }
         mDialogView.setLayoutParams(dialogViewLP);
-        mDialog.findViewById(R.id.main_frame).setLayoutParams(mainFrameLP);
+        mDialog.findViewById(co.potatoproject.plugin.volume.fancy.R.id.main_frame).setLayoutParams(mainFrameLP);
         mButtonsGroup.setLayoutParams(buttonsGroupLP);
 
         mContext.getTheme().applyStyle(mContext.getThemeResId(), true);
@@ -492,7 +493,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         row.iconMuteRes = iconMuteRes;
         row.important = important;
         row.defaultStream = defaultStream;
-        row.view = LayoutInflater.from(mContext).inflate(R.layout.volume_dialog_fancy_row, null);
+        row.view = LayoutInflater.from(mContext).inflate(co.potatoproject.plugin.volume.fancy.R.layout.volume_dialog_fancy_row, null);
         row.view.setId(row.stream);
         row.view.setTag(row);
         row.header = row.view.findViewById(R.id.volume_row_header);
@@ -719,13 +720,13 @@ public class VolumeDialogImpl implements VolumeDialog,
             ViewGroup.LayoutParams rowLP = row.view.getLayoutParams();
 
             if (mode != PanelMode.MINI) {
-                row.slider.setThumb(mContext.getDrawable(R.drawable.seekbar_thumb_material_anim));
+                row.slider.setThumb(mContext.getDrawable(co.potatoproject.plugin.volume.fancy.R.drawable.seekbar_thumb_material_anim));
                 row.icon.setVisibility(VISIBLE);
-                rowLP.width = mContext.getResources().getDimensionPixelSize(R.dimen.volume_dialog_row_width);
+                rowLP.width = mContext.getResources().getDimensionPixelSize(co.potatoproject.plugin.volume.fancy.R.dimen.volume_dialog_row_width);
             } else {
                 row.slider.setThumb(new ColorDrawable(Color.TRANSPARENT));
                 row.icon.setVisibility(GONE);
-                rowLP.width = mContext.getResources().getDimensionPixelSize(R.dimen.volume_dialog_panel_mini_width);
+                rowLP.width = mContext.getResources().getDimensionPixelSize(co.potatoproject.plugin.volume.fancy.R.dimen.volume_dialog_panel_mini_width);
             }
             row.view.setLayoutParams(rowLP);
 
@@ -733,7 +734,7 @@ public class VolumeDialogImpl implements VolumeDialog,
         }
 
         LinearLayout main = (LinearLayout) mDialog.findViewById(R.id.main);
-        View fakePadding = mDialog.findViewById(R.id.fake_padding);
+        View fakePadding = mDialog.findViewById(co.potatoproject.plugin.volume.fancy.R.id.fake_padding);
 
         ViewPropertyAnimator buttonsAnimator = mButtonsGroup.animate()
                 .alpha(1)
@@ -753,7 +754,7 @@ public class VolumeDialogImpl implements VolumeDialog,
                         mExtraButtons.setVisibility(GONE);
                     }
                 });
-        int rowSidePadding = mContext.getResources().getDimensionPixelSize(R.dimen.volume_dialog_row_side_padding);
+        int rowSidePadding = mContext.getResources().getDimensionPixelSize(co.potatoproject.plugin.volume.fancy.R.dimen.volume_dialog_row_side_padding);
 
         if(mode != PanelMode.MINI) {
             if(mode == PanelMode.EXPANDED) {
@@ -767,7 +768,7 @@ public class VolumeDialogImpl implements VolumeDialog,
             fakePadding.setVisibility(GONE);
             buttonsAnimator.start();
         } else {
-            main.setMinimumWidth(mContext.getResources().getDimensionPixelSize(R.dimen.volume_dialog_panel_mini_width));
+            main.setMinimumWidth(mContext.getResources().getDimensionPixelSize(co.potatoproject.plugin.volume.fancy.R.dimen.volume_dialog_panel_mini_width));
             mButtonsGroup.setVisibility(INVISIBLE);
             mExtraButtons.setVisibility(GONE);
             mDialogRowsView.setPadding(0, 0, 0, 0);

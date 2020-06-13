@@ -18,7 +18,7 @@
             android:innerRadius="2dp"
             android:thickness="2dp"
             android:useLevel="false"
-            android:tint="?attr/colorControlNormal"
+            android:tint="?android:attr/colorControlNormal"
             android:opticalInsetLeft="3dp"
             android:opticalInsetRight="3dp">
             <solid
