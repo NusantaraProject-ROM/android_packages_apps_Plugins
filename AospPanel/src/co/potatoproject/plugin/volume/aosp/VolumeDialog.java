@@ -28,9 +28,6 @@ import android.os.UserHandle;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
-import com.android.systemui.R;
-
-
 /**
  * Base class for dialogs that should appear over panels and keyguard.
  */
@@ -132,4 +129,5 @@ public class VolumeDialog extends AlertDialog {
                 mRegistered = false;
             }
         }
-    }}
+    }
+}

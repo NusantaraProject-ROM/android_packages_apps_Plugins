@@ -25,8 +25,7 @@ import android.view.MotionEvent;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat;
 
-import com.android.keyguard.AlphaOptimizedImageButton;
-import com.android.systemui.R;
+import co.potatoproject.systemui.resmini.AlphaOptimizedImageButton;
 
 /** Toggle button in Volume Dialog that allows extra state for when streams are opted-out */
 public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {

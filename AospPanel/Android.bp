@@ -2,8 +2,10 @@ android_app {
 
     name: "AospPanel",
 
-    libs: ["SystemUI-libs"],
-    static_libs: ["ResMini"],
+    static_libs: [
+        "ResMini",
+        "SettingsLib",
+    ],
 
     resource_dirs: ["res"],
 

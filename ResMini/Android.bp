@@ -1,9 +1,11 @@
 android_library {
     name: "ResMini",
+    static_libs: ["SystemUIPluginLib"],
     resource_dirs: [
         "res",
     ],
     manifest: "AndroidManifest.xml",
+    srcs: ["src/**/*.java"],
 
     aaptflags: ["--auto-add-overlay"],
 }

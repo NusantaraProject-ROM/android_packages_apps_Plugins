@@ -95,17 +95,17 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import co.potatoproject.systemui.resmini.ExpandableIndicator;
+import co.potatoproject.systemui.resmini.Prefs;
+
 import com.android.settingslib.Utils;
-import com.android.systemui.Prefs;
-import com.android.systemui.R;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.PluginDependency;
 import com.android.systemui.plugins.VolumeDialog;
-import com.android.systemui.plugins.VolumeDialogController;
 import com.android.systemui.plugins.VolumeDialogController.State;
 import com.android.systemui.plugins.VolumeDialogController.StreamState;
+import com.android.systemui.plugins.VolumeDialogController;
 import com.android.systemui.plugins.annotations.Requires;
-import com.android.systemui.statusbar.phone.ExpandableIndicator;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
