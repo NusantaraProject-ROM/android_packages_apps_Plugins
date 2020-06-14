@@ -22,7 +22,7 @@
     android:clipToPadding="false"
     android:theme="@style/qs_theme">
 
-    <com.android.keyguard.AlphaOptimizedImageButton
+    <co.potatoproject.systemui.resmini.AlphaOptimizedImageButton
         android:id="@+id/button"
         style="@style/VolumeButtons"
         android:layout_width="@dimen/volume_dialog_ringer_size"
