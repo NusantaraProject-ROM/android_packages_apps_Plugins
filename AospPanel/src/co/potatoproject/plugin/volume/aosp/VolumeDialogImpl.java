@@ -137,6 +137,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     static final int DIALOG_HIDE_ANIMATION_DURATION = 250;
 
     private Context mContext;
+    private Context mPluginContext;
     private WindowManager mWindowManager;
     private WindowManager.LayoutParams mWindowParams;
     private final H mHandler = new H();
@@ -187,8 +188,10 @@ public class VolumeDialogImpl implements VolumeDialog {
 
     @Override
     public void onCreate(Context sysuiContext, Context pluginContext) {
+        SysUIR.setContext(sysuiContext);
         mContext =
                 new ContextThemeWrapper(sysuiContext, SysUIR.style("qs_theme"));
+        mPluginContext = pluginContext;
         mController = PluginDependency.get(this, VolumeDialogController.class);
         mKeyguard = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         mActivityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
@@ -197,7 +200,6 @@ public class VolumeDialogImpl implements VolumeDialog {
         mHasSeenODICaptionsTooltip =
                 Prefs.getBoolean(sysuiContext, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, false);
         mLeftVolumeRocker = mContext.getResources().getBoolean(SysUIR.bool("config_audioPanelOnLeftSide"));
-        SysUIR.setContext(sysuiContext);
     }
 
     public void init(int windowType, Callback callback) {
@@ -234,7 +236,7 @@ public class VolumeDialogImpl implements VolumeDialog {
                 mWindowParams.type = WindowManager.LayoutParams.TYPE_VOLUME_OVERLAY;
         mWindowParams.format = PixelFormat.TRANSLUCENT;
         mWindowParams.windowAnimations = -1;
-        mDialog = LayoutInflater.from(mContext).inflate(co.potatoproject.plugin.volume.aosp.R.layout.volume_dialog_aosp,
+        mDialog = LayoutInflater.from(mPluginContext).inflate(co.potatoproject.plugin.volume.aosp.R.layout.volume_dialog_aosp,
                         (ViewGroup) null, false);
 
         mDialog.setOnTouchListener((v, event) -> {
@@ -488,7 +490,7 @@ public class VolumeDialogImpl implements VolumeDialog {
         row.iconMuteRes = iconMuteRes;
         row.important = important;
         row.defaultStream = defaultStream;
-        row.view = LayoutInflater.from(mContext).inflate(co.potatoproject.plugin.volume.aosp.R.layout.volume_dialog_aosp_row, null);
+        row.view = LayoutInflater.from(mPluginContext).inflate(co.potatoproject.plugin.volume.aosp.R.layout.volume_dialog_aosp_row, null);
         row.view.setId(row.stream);
         row.view.setTag(row);
         row.header = row.view.findViewById(SysUIR.id("volume_row_header"));
