@@ -29,7 +29,7 @@
         android:layout_gravity="center"
         android:orientation="vertical"
         android:animateLayoutChanges="true" >
-        <com.android.keyguard.AlphaOptimizedImageButton
+        <co.potatoproject.systemui.resmini.AlphaOptimizedImageButton
             android:id="@+id/volume_row_icon"
             style="@style/VolumeButtons"
             android:layout_width="@dimen/volume_dialog_panel_mini_width"
