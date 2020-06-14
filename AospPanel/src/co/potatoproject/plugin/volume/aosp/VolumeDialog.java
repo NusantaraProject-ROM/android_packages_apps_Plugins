@@ -28,6 +28,8 @@ import android.os.UserHandle;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
+import co.potatoproject.systemui.resmini.SysUIR;
+
 /**
  * Base class for dialogs that should appear over panels and keyguard.
  */
@@ -36,7 +38,7 @@ public class VolumeDialog extends AlertDialog {
     private final Context mContext;
 
     public VolumeDialog(Context context) {
-        this(context, R.style.Theme_SystemUI_Dialog);
+        this(context, SysUIR.style("Theme_SystemUI_Dialog"));
     }
 
     public VolumeDialog(Context context, int theme) {
