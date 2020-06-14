@@ -99,6 +99,8 @@ import co.potatoproject.systemui.resmini.ExpandableIndicator;
 import co.potatoproject.systemui.resmini.Prefs;
 import co.potatoproject.systemui.resmini.SysUIR;
 
+import co.potatoproject.plugin.volume.aosp.R;
+
 import com.android.settingslib.Utils;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.PluginDependency;
@@ -136,6 +138,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     static final int DIALOG_SHOW_ANIMATION_DURATION = 300;
     static final int DIALOG_HIDE_ANIMATION_DURATION = 250;
 
+    private SysUIR mSysUIR;
     private Context mContext;
     private Context mPluginContext;
     private WindowManager mWindowManager;
@@ -188,9 +191,9 @@ public class VolumeDialogImpl implements VolumeDialog {
 
     @Override
     public void onCreate(Context sysuiContext, Context pluginContext) {
-        SysUIR.setContext(sysuiContext);
+        mSysUIR = new SysUIR(pluginContext);
         mContext =
-                new ContextThemeWrapper(sysuiContext, SysUIR.style("qs_theme"));
+                new ContextThemeWrapper(sysuiContext, mSysUIR.style("qs_theme"));
         mPluginContext = pluginContext;
         mController = PluginDependency.get(this, VolumeDialogController.class);
         mKeyguard = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
@@ -199,7 +202,7 @@ public class VolumeDialogImpl implements VolumeDialog {
         mShowActiveStreamOnly = showActiveStreamOnly();
         mHasSeenODICaptionsTooltip =
                 Prefs.getBoolean(sysuiContext, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, false);
-        mLeftVolumeRocker = mContext.getResources().getBoolean(SysUIR.bool("config_audioPanelOnLeftSide"));
+        mLeftVolumeRocker = mContext.getResources().getBoolean(mSysUIR.bool("config_audioPanelOnLeftSide"));
     }
 
     public void init(int windowType, Callback callback) {
@@ -236,7 +239,7 @@ public class VolumeDialogImpl implements VolumeDialog {
                 mWindowParams.type = WindowManager.LayoutParams.TYPE_VOLUME_OVERLAY;
         mWindowParams.format = PixelFormat.TRANSLUCENT;
         mWindowParams.windowAnimations = -1;
-        mDialog = LayoutInflater.from(mPluginContext).inflate(co.potatoproject.plugin.volume.aosp.R.layout.volume_dialog_aosp,
+        mDialog = LayoutInflater.from(mPluginContext).inflate(R.layout.volume_dialog_aosp,
                         (ViewGroup) null, false);
 
         mDialog.setOnTouchListener((v, event) -> {
@@ -249,7 +252,7 @@ public class VolumeDialogImpl implements VolumeDialog {
             return false;
         });
 
-        mDialogView = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.volume_dialog);
+        mDialogView = mDialog.findViewById(R.id.volume_dialog);
         mDialogView.setAlpha(0);
 
         mDialogView.setOnHoverListener((v, event) -> {
@@ -265,30 +268,30 @@ public class VolumeDialogImpl implements VolumeDialog {
         dialogViewLP.gravity = Gravity.CENTER_VERTICAL;
         mDialogView.setLayoutParams(dialogViewLP);
 
-        mDialogRowsView = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.volume_dialog_rows);
-        mRinger = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.ringer);
+        mDialogRowsView = mDialog.findViewById(R.id.volume_dialog_rows);
+        mRinger = mDialog.findViewById(R.id.ringer);
         if (mRinger != null) {
-            mRingerIcon = mRinger.findViewById(co.potatoproject.plugin.volume.aosp.R.id.ringer_icon);
-            mZenIcon = mRinger.findViewById(co.potatoproject.plugin.volume.aosp.R.id.dnd_icon);
+            mRingerIcon = mRinger.findViewById(R.id.ringer_icon);
+            mZenIcon = mRinger.findViewById(R.id.dnd_icon);
         }
 
-        mODICaptionsView = mDialog.findViewById(SysUIR.id("odi_captions"));
+        mODICaptionsView = mDialog.findViewById(R.id.odi_captions);
         if (mODICaptionsView != null) {
-            mODICaptionsIcon = mODICaptionsView.findViewById(SysUIR.id("odi_captions_icon"));
+            mODICaptionsIcon = mODICaptionsView.findViewById(R.id.odi_captions_icon);
         }
-        mODICaptionsTooltipViewStub = mDialog.findViewById(SysUIR.id("odi_captions_tooltip_stub"));
+        mODICaptionsTooltipViewStub = mDialog.findViewById(R.id.odi_captions_tooltip_stub);
         if (mHasSeenODICaptionsTooltip && mODICaptionsTooltipViewStub != null) {
             mDialogView.removeView(mODICaptionsTooltipViewStub);
             mODICaptionsTooltipViewStub = null;
         }
 
-        mMediaOutputIcon = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.media_output);
+        mMediaOutputIcon = mDialog.findViewById(R.id.media_output);
 
-        mExpandRowsView = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.expandable_indicator_container);
-        mExpandRows = mDialog.findViewById(co.potatoproject.plugin.volume.aosp.R.id.expandable_indicator);
+        mExpandRowsView = mDialog.findViewById(R.id.expandable_indicator_container);
+        mExpandRows = mDialog.findViewById(R.id.expandable_indicator);
 
         LinearLayout.LayoutParams mainLP =
-                (LinearLayout.LayoutParams) mDialog.findViewById(SysUIR.id("main")).getLayoutParams();
+                (LinearLayout.LayoutParams) mDialog.findViewById(R.id.main).getLayoutParams();
         LinearLayout.LayoutParams ringerLP =
                 (LinearLayout.LayoutParams) mRinger.getLayoutParams();
         LinearLayout.LayoutParams captionsLP =
@@ -306,29 +309,29 @@ public class VolumeDialogImpl implements VolumeDialog {
             captionsLP.gravity = Gravity.LEFT;
         }
 
-        mDialog.findViewById(SysUIR.id("main")).setLayoutParams(mainLP);
+        mDialog.findViewById(R.id.main).setLayoutParams(mainLP);
         mRinger.setLayoutParams(ringerLP);
         mODICaptionsView.setLayoutParams(captionsLP);
 
         if (mRows.isEmpty()) {
             if (!AudioSystem.isSingleVolume(mContext)) {
-                addRow(STREAM_ACCESSIBILITY, SysUIR.drawable("ic_volume_accessibility"),
-                        SysUIR.drawable("ic_volume_accessibility"), true, false);
+                addRow(STREAM_ACCESSIBILITY, mSysUIR.drawable("ic_volume_accessibility"),
+                        mSysUIR.drawable("ic_volume_accessibility"), true, false);
             }
             addRow(AudioManager.STREAM_MUSIC,
-                    SysUIR.drawable("ic_volume_media"), SysUIR.drawable("ic_volume_media_mute"), true, true);
+                    mSysUIR.drawable("ic_volume_media"), mSysUIR.drawable("ic_volume_media_mute"), true, true);
             if (!AudioSystem.isSingleVolume(mContext)) {
                 addRow(AudioManager.STREAM_RING,
-                        SysUIR.drawable("ic_volume_ringer"), SysUIR.drawable("ic_volume_ringer_mute"), true, false);
+                        mSysUIR.drawable("ic_volume_ringer"), mSysUIR.drawable("ic_volume_ringer_mute"), true, false);
                 addRow(STREAM_ALARM,
-                        SysUIR.drawable("ic_alarm"), SysUIR.drawable("ic_volume_alarm_mute"), true, false);
+                        mSysUIR.drawable("ic_alarm"), mSysUIR.drawable("ic_volume_alarm_mute"), true, false);
                 addRow(AudioManager.STREAM_VOICE_CALL,
                         com.android.internal.R.drawable.ic_phone,
                         com.android.internal.R.drawable.ic_phone, false, false);
                 addRow(AudioManager.STREAM_BLUETOOTH_SCO,
-                        SysUIR.drawable("ic_volume_bt_sco"), SysUIR.drawable("ic_volume_bt_sco"), false, false);
-                addRow(AudioManager.STREAM_SYSTEM, SysUIR.drawable("ic_volume_system"),
-                        SysUIR.drawable("ic_volume_system_mute"), false, false);
+                        mSysUIR.drawable("ic_volume_bt_sco"), mSysUIR.drawable("ic_volume_bt_sco"), false, false);
+                addRow(AudioManager.STREAM_SYSTEM, mSysUIR.drawable("ic_volume_system"),
+                        mSysUIR.drawable("ic_volume_system_mute"), false, false);
             }
         } else {
             addExistingRows();
@@ -345,7 +348,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     private final OnComputeInternalInsetsListener mInsetsListener = internalInsetsInfo -> {
         internalInsetsInfo.touchableRegion.setEmpty();
         internalInsetsInfo.setTouchableInsets(InternalInsetsInfo.TOUCHABLE_INSETS_REGION);
-        View main = mDialog.findViewById(SysUIR.id("main"));
+        View main = mDialog.findViewById(R.id.main);
         int[] mainLocation = new int[2];
         main.getLocationOnScreen(mainLocation);
         int[] dialogLocation = new int[2];
@@ -490,21 +493,21 @@ public class VolumeDialogImpl implements VolumeDialog {
         row.iconMuteRes = iconMuteRes;
         row.important = important;
         row.defaultStream = defaultStream;
-        row.view = LayoutInflater.from(mPluginContext).inflate(co.potatoproject.plugin.volume.aosp.R.layout.volume_dialog_aosp_row, null);
+        row.view = LayoutInflater.from(mPluginContext).inflate(R.layout.volume_dialog_aosp_row, null);
         row.view.setId(row.stream);
         row.view.setTag(row);
-        row.header = row.view.findViewById(SysUIR.id("volume_row_header"));
+        row.header = row.view.findViewById(R.id.volume_row_header);
         row.header.setId(20 * row.stream);
         if (stream == STREAM_ACCESSIBILITY) {
             row.header.setFilters(new InputFilter[] {new InputFilter.LengthFilter(13)});
         }
-        row.dndIcon = row.view.findViewById(SysUIR.id("dnd_icon"));
-        row.slider = row.view.findViewById(SysUIR.id("volume_row_slider"));
+        row.dndIcon = row.view.findViewById(R.id.dnd_icon);
+        row.slider = row.view.findViewById(R.id.volume_row_slider);
         row.slider.setOnSeekBarChangeListener(new VolumeSeekBarChangeListener(row));
 
         row.anim = null;
 
-        row.icon = row.view.findViewById(SysUIR.id("volume_row_icon"));
+        row.icon = row.view.findViewById(R.id.volume_row_icon);
         row.icon.setImageResource(iconRes);
         if (row.stream != AudioSystem.STREAM_ACCESSIBILITY) {
             row.icon.setOnClickListener(v -> {
@@ -563,10 +566,10 @@ public class VolumeDialogImpl implements VolumeDialog {
             mExpandRows.setOnClickListener(v -> {
                 rescheduleTimeoutH();
                 if (!mExpanded) {
-                    addRow(AudioManager.STREAM_RING, SysUIR.drawable("ic_volume_ringer"),
-                            SysUIR.drawable("ic_volume_ringer_mute"), true, false);
-                    addRow(AudioManager.STREAM_ALARM, SysUIR.drawable("ic_volume_alarm"),
-                            SysUIR.drawable("ic_volume_alarm_mute"), true, false);
+                    addRow(AudioManager.STREAM_RING, mSysUIR.drawable("ic_volume_ringer"),
+                            mSysUIR.drawable("ic_volume_ringer_mute"), true, false);
+                    addRow(AudioManager.STREAM_ALARM, mSysUIR.drawable("ic_volume_alarm"),
+                            mSysUIR.drawable("ic_volume_alarm_mute"), true, false);
                     updateAllActiveRows();
                     mExpanded = true;
                     updateOutputSwitcherVisibility();
@@ -643,7 +646,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     protected void showCaptionsTooltip() {
         if (!mHasSeenODICaptionsTooltip && mODICaptionsTooltipViewStub != null) {
             mODICaptionsTooltipView = mODICaptionsTooltipViewStub.inflate();
-            mODICaptionsTooltipView.findViewById(SysUIR.id("dismiss")).setOnClickListener(v -> {
+            mODICaptionsTooltipView.findViewById(R.id.dismiss).setOnClickListener(v -> {
                 hideCaptionsTooltip();
                 Events.writeEvent(mContext, Events.EVENT_ODI_CAPTIONS_TOOLTIP_CLICK);
             });
@@ -685,7 +688,7 @@ public class VolumeDialogImpl implements VolumeDialog {
 
     protected void tryToRemoveCaptionsTooltip() {
         if (mHasSeenODICaptionsTooltip && mODICaptionsTooltipView != null) {
-            ViewGroup container = mDialog.findViewById(SysUIR.id("volume_dialog_container"));
+            ViewGroup container = mDialog.findViewById(R.id.volume_dialog_container);
             container.removeView(mODICaptionsTooltipView);
             mODICaptionsTooltipView = null;
         }
@@ -756,7 +759,7 @@ public class VolumeDialogImpl implements VolumeDialog {
                 final StreamState ss = mState.states.get(AudioManager.STREAM_RING);
                 if (ss != null) {
                     toastText = mContext.getString(
-                            SysUIR.string("volume_dialog_ringer_guidance_ring"),
+                            mSysUIR.string("volume_dialog_ringer_guidance_ring"),
                             Utils.formatPercentage(ss.level, ss.levelMax));
                 }
                 break;
@@ -970,33 +973,33 @@ public class VolumeDialogImpl implements VolumeDialog {
             enableRingerViewsH(!isZenMuted);
             switch (mState.ringerModeInternal) {
                 case AudioManager.RINGER_MODE_VIBRATE:
-                    mRingerIcon.setImageResource(SysUIR.drawable("ic_volume_ringer_vibrate"));
+                    mRingerIcon.setImageResource(mSysUIR.drawable("ic_volume_ringer_vibrate"));
                     addAccessibilityDescription(mRingerIcon, RINGER_MODE_VIBRATE,
-                            mContext.getString(SysUIR.string("volume_ringer_hint_mute")));
+                            mContext.getString(mSysUIR.string("volume_ringer_hint_mute")));
                     mRingerIcon.setTag(Events.ICON_STATE_VIBRATE);
                     break;
                 case AudioManager.RINGER_MODE_SILENT:
-                    mRingerIcon.setImageResource(SysUIR.drawable("ic_volume_ringer_mute"));
+                    mRingerIcon.setImageResource(mSysUIR.drawable("ic_volume_ringer_mute"));
                     mRingerIcon.setTag(Events.ICON_STATE_MUTE);
                     addAccessibilityDescription(mRingerIcon, RINGER_MODE_SILENT,
-                            mContext.getString(SysUIR.string("volume_ringer_hint_unmute")));
+                            mContext.getString(mSysUIR.string("volume_ringer_hint_unmute")));
                     break;
                 case AudioManager.RINGER_MODE_NORMAL:
                 default:
                     boolean muted = (mAutomute && ss.level == 0) || ss.muted;
                     if (!isZenMuted && muted) {
-                        mRingerIcon.setImageResource(SysUIR.drawable("ic_volume_ringer_mute"));
+                        mRingerIcon.setImageResource(mSysUIR.drawable("ic_volume_ringer_mute"));
                         addAccessibilityDescription(mRingerIcon, RINGER_MODE_NORMAL,
-                                mContext.getString(SysUIR.string("volume_ringer_hint_unmute")));
+                                mContext.getString(mSysUIR.string("volume_ringer_hint_unmute")));
                         mRingerIcon.setTag(Events.ICON_STATE_MUTE);
                     } else {
-                        mRingerIcon.setImageResource(SysUIR.drawable("ic_volume_ringer"));
+                        mRingerIcon.setImageResource(mSysUIR.drawable("ic_volume_ringer"));
                         if (mController.hasVibrator()) {
                             addAccessibilityDescription(mRingerIcon, RINGER_MODE_NORMAL,
-                                    mContext.getString(SysUIR.string("volume_ringer_hint_vibrate")));
+                                    mContext.getString(mSysUIR.string("volume_ringer_hint_vibrate")));
                         } else {
                             addAccessibilityDescription(mRingerIcon, RINGER_MODE_NORMAL,
-                                    mContext.getString(SysUIR.string("volume_ringer_hint_mute")));
+                                    mContext.getString(mSysUIR.string("volume_ringer_hint_mute")));
                         }
                         mRingerIcon.setTag(Events.ICON_STATE_UNMUTE);
                     }
@@ -1009,14 +1012,14 @@ public class VolumeDialogImpl implements VolumeDialog {
         int currStateResId;
         switch (currState) {
             case RINGER_MODE_SILENT:
-                currStateResId = SysUIR.string("volume_ringer_status_silent");
+                currStateResId = mSysUIR.string("volume_ringer_status_silent");
                 break;
             case RINGER_MODE_VIBRATE:
-                currStateResId = SysUIR.string("volume_ringer_status_vibrate");
+                currStateResId = mSysUIR.string("volume_ringer_status_vibrate");
                 break;
             case RINGER_MODE_NORMAL:
             default:
-                currStateResId = SysUIR.string("volume_ringer_status_normal");
+                currStateResId = mSysUIR.string("volume_ringer_status_normal");
         }
 
         view.setContentDescription(mContext.getString(currStateResId));
@@ -1082,7 +1085,7 @@ public class VolumeDialogImpl implements VolumeDialog {
             if (!ss.dynamic) continue;
             mDynamic.put(stream, true);
             if (findRow(stream) == null) {
-                addRow(stream, SysUIR.drawable("ic_volume_remote"), SysUIR.drawable("ic_volume_remote_mute"), true,
+                addRow(stream, mSysUIR.drawable("ic_volume_remote"), mSysUIR.drawable("ic_volume_remote_mute"), true,
                         false, true);
             }
         }
@@ -1101,7 +1104,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     }
 
     CharSequence composeWindowTitle() {
-        return mContext.getString(SysUIR.string("volume_dialog_title"), getStreamLabelH(getActiveRow().ss));
+        return mContext.getString(mSysUIR.string("volume_dialog_title"), getStreamLabelH(getActiveRow().ss));
     }
 
     private void updateVolumeRowH(VolumeRow row) {
@@ -1158,39 +1161,39 @@ public class VolumeDialogImpl implements VolumeDialog {
         row.icon.setEnabled(iconEnabled);
         row.icon.setAlpha(iconEnabled ? 1 : 0.5f);
         final int iconRes =
-                isRingVibrate ? SysUIR.drawable("ic_volume_ringer_vibrate")
+                isRingVibrate ? mSysUIR.drawable("ic_volume_ringer_vibrate")
                 : isRingSilent || zenMuted ? row.iconMuteRes
                 : ss.routedToBluetooth ?
-                        (ss.muted ? SysUIR.drawable("ic_volume_media_bt_mute")
-                                : SysUIR.drawable("ic_volume_media_bt"))
+                        (ss.muted ? mSysUIR.drawable("ic_volume_media_bt_mute")
+                                : mSysUIR.drawable("ic_volume_media_bt"))
                 : mAutomute && ss.level == 0 ? row.iconMuteRes
                 : isMuted ? row.iconMuteRes : row.iconRes;
         row.icon.setImageResource(iconRes);
         row.iconState =
-                iconRes == SysUIR.drawable("ic_volume_ringer_vibrate") ? Events.ICON_STATE_VIBRATE
-                : (iconRes == SysUIR.drawable("ic_volume_media_bt_mute") || iconRes == row.iconMuteRes)
+                iconRes == mSysUIR.drawable("ic_volume_ringer_vibrate") ? Events.ICON_STATE_VIBRATE
+                : (iconRes == mSysUIR.drawable("ic_volume_media_bt_mute") || iconRes == row.iconMuteRes)
                         ? Events.ICON_STATE_MUTE
-                : (iconRes == SysUIR.drawable("ic_volume_media_bt") || iconRes == row.iconRes)
+                : (iconRes == mSysUIR.drawable("ic_volume_media_bt") || iconRes == row.iconRes)
                         ? Events.ICON_STATE_UNMUTE
                 : Events.ICON_STATE_UNKNOWN;
         if (iconEnabled) {
             if (isRingStream) {
                 if (isRingVibrate) {
                     row.icon.setContentDescription(mContext.getString(
-                            SysUIR.string("volume_stream_content_description_unmute"),
+                            mSysUIR.string("volume_stream_content_description_unmute"),
                             getStreamLabelH(ss)));
                 } else {
                     if (mController.hasVibrator()) {
                         row.icon.setContentDescription(mContext.getString(
                                 mShowA11yStream
-                                        ? SysUIR.string("volume_stream_content_description_vibrate_a11y")
-                                        : SysUIR.string("volume_stream_content_description_vibrate"),
+                                        ? mSysUIR.string("volume_stream_content_description_vibrate_a11y")
+                                        : mSysUIR.string("volume_stream_content_description_vibrate"),
                                 getStreamLabelH(ss)));
                     } else {
                         row.icon.setContentDescription(mContext.getString(
                                 mShowA11yStream
-                                        ? SysUIR.string("volume_stream_content_description_mute_a11y")
-                                        : SysUIR.string("volume_stream_content_description_mute"),
+                                        ? mSysUIR.string("volume_stream_content_description_mute_a11y")
+                                        : mSysUIR.string("volume_stream_content_description_mute"),
                                 getStreamLabelH(ss)));
                     }
                 }
@@ -1199,13 +1202,13 @@ public class VolumeDialogImpl implements VolumeDialog {
             } else {
                 if (ss.muted || mAutomute && ss.level == 0) {
                    row.icon.setContentDescription(mContext.getString(
-                           SysUIR.string("volume_stream_content_description_unmute"),
+                           mSysUIR.string("volume_stream_content_description_unmute"),
                            getStreamLabelH(ss)));
                 } else {
                     row.icon.setContentDescription(mContext.getString(
                             mShowA11yStream
-                                    ? SysUIR.string("volume_stream_content_description_mute_a11y")
-                                    : SysUIR.string("volume_stream_content_description_mute"),
+                                    ? mSysUIR.string("volume_stream_content_description_mute_a11y")
+                                    : mSysUIR.string("volume_stream_content_description_mute"),
                             getStreamLabelH(ss)));
                 }
             }

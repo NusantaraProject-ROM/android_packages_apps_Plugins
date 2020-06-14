@@ -5,48 +5,51 @@ import android.content.res.Resources;
 import android.content.pm.PackageManager.NameNotFoundException;
 
 public class SysUIR {
-    private static Context mContext;
+    private Context mContext;
 
-    public static void setContext(Context context) {
+    public SysUIR(Context context) {
         mContext = context;
     }
 
-    public static int color(String resName) {
+    public int color(String resName) {
         return sysuiResId("color", resName);
     }
 
-    public static int attr(String resName) {
+    public int attr(String resName) {
         return sysuiResId("attr", resName);
     }
 
-    public static int id(String resName) {
+    public int id(String resName) {
         return sysuiResId("id", resName);
     }
 
-    public static int style(String resName, Context context) {
-        setContext(context);
-        return style(resName);
+    public int style(String resName) {
+        return style(resName, mContext);
     }
 
-    public static int style(String resName) {
-        return sysuiResId("style", resName);
+    public int style(String resName, Context context) {
+        return sysuiResId("style", resName, context);
     }
 
-    public static int drawable(String resName) {
+    public int drawable(String resName) {
         return sysuiResId("drawable", resName);
     }
 
-    public static int bool(String resName) {
+    public int bool(String resName) {
         return sysuiResId("bool", resName);
     }
 
-    public static int string(String resName) {
+    public int string(String resName) {
         return sysuiResId("string", resName);
     }
+
+    private int sysuiResId(String resType, String resName) {
+        return sysuiResId(resType, resName, mContext);
+    }
     
-    private static int sysuiResId(String resType, String resName) {
+    private int sysuiResId(String resType, String resName, Context context) {
         try {
-            Resources res = mContext.getPackageManager().getResourcesForApplication("com.android.systemui");
+            Resources res = context.getPackageManager().getResourcesForApplication("com.android.systemui");
             return res.getIdentifier(resName, resType, "com.android.systemui");
         }
         catch (NameNotFoundException e) {

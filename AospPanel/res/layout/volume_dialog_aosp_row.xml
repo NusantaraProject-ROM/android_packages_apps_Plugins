@@ -55,7 +55,7 @@
                 android:rotation="-90" />
         </FrameLayout>
 
-        <com.android.keyguard.AlphaOptimizedImageButton
+        <co.potatoproject.systemui.resmini.AlphaOptimizedImageButton
             android:id="@+id/volume_row_icon"
             style="@style/VolumeButtons"
             android:layout_width="@dimen/volume_dialog_tap_target_size"

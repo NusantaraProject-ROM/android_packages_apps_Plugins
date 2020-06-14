@@ -31,8 +31,7 @@ import co.potatoproject.systemui.resmini.SysUIR;
 /** Toggle button in Volume Dialog that allows extra state for when streams are opted-out */
 public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
 
-    private static final int[] OPTED_OUT_STATE = new int[] { SysUIR.attr("optedOut") };
-
+    private SysUIR mSysUIR;
     private ConfirmedTapListener mConfirmedTapListener;
     private boolean mCaptionsEnabled = false;
     private boolean mOptedOut = false;
@@ -46,11 +45,13 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
         }
     };
 
+    public CaptionsToggleImageButton(Context context) {
+        this(context, null);
+    }
+
     public CaptionsToggleImageButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        SysUIR.setContext(context);
-        this.setContentDescription(
-                getContext().getString(SysUIR.string("volume_odi_captions_content_description")));
+        mSysUIR = new SysUIR(context);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
     public int[] onCreateDrawableState(int extraSpace) {
         int[] state = super.onCreateDrawableState(extraSpace + 1);
         if (mOptedOut) {
-            mergeDrawableStates(state, OPTED_OUT_STATE);
+            mergeDrawableStates(state, new int[] { mSysUIR.attr("optedOut") });
         }
         return state;
     }
@@ -75,13 +76,13 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
                 this,
                 AccessibilityActionCompat.ACTION_CLICK,
                 mCaptionsEnabled
-                        ? getContext().getString(SysUIR.string("volume_odi_captions_hint_disable"))
-                        : getContext().getString(SysUIR.string("volume_odi_captions_hint_enable")),
+                        ? getContext().getString(mSysUIR.string("volume_odi_captions_hint_disable"))
+                        : getContext().getString(mSysUIR.string("volume_odi_captions_hint_enable")),
                 (view, commandArguments) -> tryToSendTapConfirmedEvent());
 
         return this.setImageResourceAsync(mCaptionsEnabled
-                ? SysUIR.drawable("ic_volume_odi_captions")
-                : SysUIR.drawable("ic_volume_odi_captions_disabled"));
+                ? mSysUIR.drawable("ic_volume_odi_captions")
+                : mSysUIR.drawable("ic_volume_odi_captions_disabled"));
     }
 
     private boolean tryToSendTapConfirmedEvent() {
