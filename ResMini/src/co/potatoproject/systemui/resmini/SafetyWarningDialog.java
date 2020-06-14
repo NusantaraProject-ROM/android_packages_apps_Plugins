@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package co.potatoproject.plugin.volume.aosp;
+package co.potatoproject.systemui.resmini;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,7 +30,7 @@ import android.view.WindowManager;
 abstract public class SafetyWarningDialog extends VolumeDialog
         implements DialogInterface.OnDismissListener, DialogInterface.OnClickListener {
 
-    private static final String TAG = Util.logTag(SafetyWarningDialog.class);
+    private static final String TAG = Utils.logTag(SafetyWarningDialog.class);
 
     private static final int KEY_CONFIRM_ALLOWED_AFTER = 1000; // milliseconds
 

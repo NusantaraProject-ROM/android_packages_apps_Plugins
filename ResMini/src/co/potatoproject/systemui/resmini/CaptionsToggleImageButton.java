@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package co.potatoproject.plugin.volume.aosp;
+package co.potatoproject.systemui.resmini;
 
 import android.content.Context;
 import android.os.Handler;
@@ -24,9 +24,6 @@ import android.view.MotionEvent;
 
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat;
-
-import co.potatoproject.systemui.resmini.AlphaOptimizedImageButton;
-import co.potatoproject.systemui.resmini.SysUIR;
 
 /** Toggle button in Volume Dialog that allows extra state for when streams are opted-out */
 public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {

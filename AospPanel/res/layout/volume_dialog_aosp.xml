@@ -138,7 +138,7 @@
             android:clipToPadding="false"
             android:translationZ="@dimen/volume_dialog_elevation"
             android:background="@drawable/rounded_bg_full">
-            <co.potatoproject.plugin.volume.aosp.CaptionsToggleImageButton
+            <co.potatoproject.systemui.resmini.CaptionsToggleImageButton
                 android:id="@+id/odi_captions_icon"
                 android:src="@drawable/ic_volume_odi_captions_disabled"
                 style="@style/VolumeButtons"

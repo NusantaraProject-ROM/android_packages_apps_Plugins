@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package co.potatoproject.plugin.volume.aosp;
+package co.potatoproject.systemui.resmini;
 
 import android.content.Context;
 import android.content.SharedPreferences;

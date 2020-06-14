@@ -1,6 +1,9 @@
 android_library {
     name: "ResMini",
-    static_libs: ["SystemUIPluginLib"],
+    static_libs: [
+        "SystemUIPluginLib",
+        "androidx.appcompat_appcompat",
+    ],
     resource_dirs: [
         "res",
     ],

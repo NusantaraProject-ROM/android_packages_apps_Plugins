@@ -15,7 +15,7 @@
  * limitations under the License
  */
 
-package co.potatoproject.plugin.volume.aosp;
+package co.potatoproject.systemui.resmini;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -27,8 +27,6 @@ import android.content.IntentFilter;
 import android.os.UserHandle;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-
-import co.potatoproject.systemui.resmini.SysUIR;
 
 /**
  * Base class for dialogs that should appear over panels and keyguard.

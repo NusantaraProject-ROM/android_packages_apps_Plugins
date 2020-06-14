@@ -6,8 +6,12 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.view.View;
+import android.widget.TextView;
 
 import java.text.NumberFormat;
+import java.util.Objects;
 
 public class Utils {
 
@@ -108,5 +112,38 @@ public class Utils {
         Drawable drawable = ta.getDrawable(0);
         ta.recycle();
         return drawable;
+    }
+
+    public static String logTag(Class<?> c) {
+        final String tag = "vol." + c.getSimpleName();
+        return tag.length() < 23 ? tag : tag.substring(0, 23);
+    }
+
+    public static String ringerModeToString(int ringerMode) {
+        switch (ringerMode) {
+            case AudioManager.RINGER_MODE_SILENT:
+                return "RINGER_MODE_SILENT";
+            case AudioManager.RINGER_MODE_VIBRATE:
+                return "RINGER_MODE_VIBRATE";
+            case AudioManager.RINGER_MODE_NORMAL:
+                return "RINGER_MODE_NORMAL";
+            default:
+                return "RINGER_MODE_UNKNOWN_" + ringerMode;
+        }
+    }
+
+    public static final void setVisOrGone(View v, boolean vis) {
+        if (v == null || (v.getVisibility() == View.VISIBLE) == vis) return;
+        v.setVisibility(vis ? View.VISIBLE : View.GONE);
+    }
+
+    private static CharSequence emptyToNull(CharSequence str) {
+        return str == null || str.length() == 0 ? null : str;
+    }
+    
+    public static boolean setText(TextView tv, CharSequence text) {
+        if (Objects.equals(emptyToNull(tv.getText()), emptyToNull(text))) return false;
+        tv.setText(text);
+        return true;
     }
 }

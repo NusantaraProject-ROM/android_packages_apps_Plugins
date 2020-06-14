@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package co.potatoproject.plugin.volume.aosp;
+package co.potatoproject.systemui.resmini;
 
 import android.util.Log;
 
-class D {
+public class D {
     public static boolean BUG = Log.isLoggable("volume", Log.DEBUG);
 }

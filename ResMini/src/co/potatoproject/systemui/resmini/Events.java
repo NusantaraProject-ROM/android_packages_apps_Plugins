@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package co.potatoproject.plugin.volume.aosp;
+package co.potatoproject.systemui.resmini;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -32,7 +32,7 @@ import java.util.Arrays;
  *  Interesting events related to the volume.
  */
 public class Events {
-    private static final String TAG = Util.logTag(Events.class);
+    private static final String TAG = Utils.logTag(Events.class);
 
     public static final int EVENT_SHOW_DIALOG = 0;  // (reason|int) (keyguard|bool)
     public static final int EVENT_DISMISS_DIALOG = 1; // (reason|int)

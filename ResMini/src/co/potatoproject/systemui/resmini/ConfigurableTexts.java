@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package co.potatoproject.plugin.volume.aosp;
+package co.potatoproject.systemui.resmini;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -75,7 +75,7 @@ public class ConfigurableTexts {
     private void setTextLabelH(TextView text, int labelResId) {
         try {
             if (labelResId >= 0) {
-                Util.setText(text, mContext.getString(labelResId));
+                Utils.setText(text, mContext.getString(labelResId));
             }
         } catch (Resources.NotFoundException e) {
             // oh well.

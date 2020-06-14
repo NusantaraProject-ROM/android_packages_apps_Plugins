@@ -4,7 +4,6 @@ android_app {
 
     static_libs: [
         "ResMini",
-        "SettingsLib",
     ],
 
     resource_dirs: ["res"],
