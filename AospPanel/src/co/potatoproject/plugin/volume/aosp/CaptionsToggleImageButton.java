@@ -48,6 +48,7 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
 
     public CaptionsToggleImageButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+        SysUIR.setContext(context);
         this.setContentDescription(
                 getContext().getString(SysUIR.string("volume_odi_captions_content_description")));
     }
