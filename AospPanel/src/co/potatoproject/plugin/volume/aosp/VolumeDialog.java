@@ -38,13 +38,12 @@ public class VolumeDialog extends AlertDialog {
     private final Context mContext;
 
     public VolumeDialog(Context context) {
-        SysUIR.setContext(context);
-        this(context, SysUIR.style("Theme_SystemUI_Dialog"));
+        this(context, SysUIR.style("Theme_SystemUI_Dialog", context));
     }
 
     public VolumeDialog(Context context, int theme) {
-        SysUIR.setContext(context);
         super(context, theme);
+        SysUIR.setContext(context);
         mContext = context;
 
         applyFlags(this);

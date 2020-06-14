@@ -23,6 +23,11 @@ public class SysUIR {
         return sysuiResId("id", resName);
     }
 
+    public static int style(String resName, Context context) {
+        setContext(context);
+        return style(resName);
+    }
+
     public static int style(String resName) {
         return sysuiResId("style", resName);
     }
