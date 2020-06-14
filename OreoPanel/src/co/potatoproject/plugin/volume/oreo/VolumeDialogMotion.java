@@ -32,8 +32,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.PathInterpolator;
 
+import co.potatoproject.systemui.resmini.D;
+import co.potatoproject.systemui.resmini.Utils;
+
 public class VolumeDialogMotion {
-    private static final String TAG = Util.logTag(VolumeDialogMotion.class);
+    private static final String TAG = Utils.logTag(VolumeDialogMotion.class);
 
     private static final float ANIMATION_SCALE = 1.0f;
     private static final int PRE_DISMISS_DELAY = 50;

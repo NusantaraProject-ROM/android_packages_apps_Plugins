@@ -51,8 +51,7 @@ public class SysUIR {
         try {
             Resources res = context.getPackageManager().getResourcesForApplication("com.android.systemui");
             return res.getIdentifier(resName, resType, "com.android.systemui");
-        }
-        catch (NameNotFoundException e) {
+        } catch (NameNotFoundException e) {
             e.printStackTrace();
             return 0;
         }
