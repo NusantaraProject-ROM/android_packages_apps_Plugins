@@ -409,7 +409,7 @@ public class VolumeDialogImpl implements VolumeDialog {
         if(!isAudioPanelOnLeftSide()){
             mDialogRowsView.addView(row.view);
         } else {
-            mDialogRowsView.addView(row.view, 0);
+            mDialogRowsView.addView(row.view);
         }
         mRows.add(row);
     }
@@ -1095,8 +1095,8 @@ public class VolumeDialogImpl implements VolumeDialog {
             if (!ss.dynamic) continue;
             mDynamic.put(stream, true);
             if (findRow(stream) == null) {
-                addRow(stream, mSysUIR.drawable("R.drawable.ic_volume_remote"),
-                        mSysUIR.drawable("R.drawable.ic_volume_remote_mute"), true,
+                addRow(stream, mSysUIR.drawable("ic_volume_remote"),
+                        mSysUIR.drawable("ic_volume_remote_mute"), true,
                         false, true);
             }
         }
