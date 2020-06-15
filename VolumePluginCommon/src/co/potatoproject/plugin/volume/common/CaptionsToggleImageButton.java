@@ -17,6 +17,9 @@
 package co.potatoproject.plugin.volume.common;
 
 import android.content.Context;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -66,20 +69,28 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
         return state;
     }
 
-    public Runnable setCaptionsEnabled(boolean areCaptionsEnabled) {
+    public void setCaptionsEnabled(boolean areCaptionsEnabled) {
         this.mCaptionsEnabled = areCaptionsEnabled;
+        Resources res;
+
+        try {
+            res = getContext().getPackageManager().getResourcesForApplication("com.android.systemui");
+        } catch (NameNotFoundException e) {
+            res = getContext().getResources();
+        }
 
         ViewCompat.replaceAccessibilityAction(
                 this,
                 AccessibilityActionCompat.ACTION_CLICK,
                 mCaptionsEnabled
-                        ? getContext().getString(mSysUIR.string("volume_odi_captions_hint_disable"))
-                        : getContext().getString(mSysUIR.string("volume_odi_captions_hint_enable")),
+                        ? res.getString(mSysUIR.string("volume_odi_captions_hint_disable"))
+                        : res.getString(mSysUIR.string("volume_odi_captions_hint_enable")),
                 (view, commandArguments) -> tryToSendTapConfirmedEvent());
 
-        return this.setImageResourceAsync(mCaptionsEnabled
+        Drawable drawable = res.getDrawable(mCaptionsEnabled
                 ? mSysUIR.drawable("ic_volume_odi_captions")
                 : mSysUIR.drawable("ic_volume_odi_captions_disabled"));
+        this.setImageDrawable(drawable);
     }
 
     private boolean tryToSendTapConfirmedEvent() {

@@ -191,9 +191,9 @@ public class VolumeDialogImpl implements VolumeDialog {
     @Override
     public void onCreate(Context sysuiContext, Context pluginContext) {
         mSysUIR = new SysUIR(pluginContext);
-        mContext =
-                new ContextThemeWrapper(pluginContext, R.style.qs_theme);
-        mSysUIContext = sysuiContext;
+        mContext = pluginContext;
+        mSysUIContext = 
+                new ContextThemeWrapper(sysuiContext, mSysUIR.style("qs_theme", sysuiContext));
         mController = PluginDependency.get(this, VolumeDialogController.class);
         mKeyguard = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         mActivityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
@@ -221,6 +221,10 @@ public class VolumeDialogImpl implements VolumeDialog {
 
     private void initDialog() {
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+
+        mSysUIContext.getTheme().applyStyle(mSysUIContext.getThemeResId(), true);
+        mSysUIContext.getTheme().rebase();
+        mContext.getTheme().setTo(mSysUIContext.getTheme());
 
         mConfigurableTexts = new ConfigurableTexts(mContext);
         mHovering = false;
@@ -277,6 +281,8 @@ public class VolumeDialogImpl implements VolumeDialog {
         mODICaptionsView = mDialog.findViewById(R.id.odi_captions);
         if (mODICaptionsView != null) {
             mODICaptionsIcon = mODICaptionsView.findViewById(R.id.odi_captions_icon);
+            mODICaptionsIcon.setImageDrawable(
+                    mSysUIContext.getDrawable(mSysUIR.drawable("ic_volume_odi_captions_disabled")));
         }
         mODICaptionsTooltipViewStub = mDialog.findViewById(R.id.odi_captions_tooltip_stub);
         if (mHasSeenODICaptionsTooltip && mODICaptionsTooltipViewStub != null) {
@@ -335,8 +341,6 @@ public class VolumeDialogImpl implements VolumeDialog {
         } else {
             addExistingRows();
         }
-
-        mContext.getTheme().applyStyle(mContext.getThemeResId(), true);
 
         updateRowsH(getActiveRow());
         initRingerH();
@@ -708,7 +712,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     private void updateCaptionsIcon() {
         boolean captionsEnabled = mController.areCaptionsEnabled();
         if (mODICaptionsIcon.getCaptionsEnabled() != captionsEnabled) {
-            mHandler.post(mODICaptionsIcon.setCaptionsEnabled(captionsEnabled));
+            mODICaptionsIcon.setCaptionsEnabled(captionsEnabled);
         }
 
         boolean isOptedOut = mController.isCaptionStreamOptedOut();
