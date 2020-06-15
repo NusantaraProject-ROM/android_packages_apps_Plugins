@@ -19,8 +19,7 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
     android:clipChildren="false"
-    android:clipToPadding="false"
-    android:theme="@style/qs_theme">
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_height="wrap_content"

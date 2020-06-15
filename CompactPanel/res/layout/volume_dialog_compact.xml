@@ -22,7 +22,6 @@
     android:gravity="top|right"
     android:layout_gravity="top|right"
     android:background="@android:color/transparent"
-    android:theme="@style/qs_theme"
     android:clipToPadding="false"
     android:clipChildren="false">
 
@@ -106,7 +105,6 @@
                     android:clipToPadding="false">
                     <co.potatoproject.plugin.volume.common.CaptionsToggleImageButton
                         android:id="@+id/odi_captions_icon"
-                        android:src="@drawable/ic_volume_odi_captions_disabled"
                         style="@style/VolumeButtons"
                         android:background="@drawable/rounded_ripple"
                         android:layout_width="match_parent"
