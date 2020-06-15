@@ -54,6 +54,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.AudioSystem;
 import android.os.Debug;
@@ -313,23 +314,23 @@ public class VolumeDialogImpl implements VolumeDialog {
 
         if (mRows.isEmpty()) {
             if (!AudioSystem.isSingleVolume(mContext)) {
-                addRow(STREAM_ACCESSIBILITY, R.drawable.ic_volume_accessibility,
-                        R.drawable.ic_volume_accessibility, true, false);
+                addRow(STREAM_ACCESSIBILITY, mSysUIR.drawable("ic_volume_accessibility"),
+                        mSysUIR.drawable("ic_volume_accessibility"), true, false);
             }
             addRow(AudioManager.STREAM_MUSIC,
-                    R.drawable.ic_volume_media, R.drawable.ic_volume_media_mute, true, true);
+                    mSysUIR.drawable("ic_volume_media"), mSysUIR.drawable("ic_volume_media_mute"), true, true);
             if (!AudioSystem.isSingleVolume(mContext)) {
                 addRow(AudioManager.STREAM_RING,
-                        R.drawable.ic_volume_ringer, R.drawable.ic_volume_ringer_mute, true, false);
+                        mSysUIR.drawable("ic_volume_ringer"), mSysUIR.drawable("ic_volume_ringer_mute"), true, false);
                 addRow(STREAM_ALARM,
-                        R.drawable.ic_alarm, R.drawable.ic_volume_alarm_mute, true, false);
+                        mSysUIR.drawable("ic_alarm"), mSysUIR.drawable("ic_volume_alarm_mute"), true, false);
                 addRow(AudioManager.STREAM_VOICE_CALL,
                         com.android.internal.R.drawable.ic_phone,
                         com.android.internal.R.drawable.ic_phone, false, false);
                 addRow(AudioManager.STREAM_BLUETOOTH_SCO,
-                        R.drawable.ic_volume_bt_sco, R.drawable.ic_volume_bt_sco, false, false);
-                addRow(AudioManager.STREAM_SYSTEM, R.drawable.ic_volume_system,
-                        R.drawable.ic_volume_system_mute, false, false);
+                        mSysUIR.drawable("ic_volume_bt_sco"), mSysUIR.drawable("ic_volume_bt_sco"), false, false);
+                addRow(AudioManager.STREAM_SYSTEM, mSysUIR.drawable("ic_volume_system"),
+                        mSysUIR.drawable("ic_volume_system_mute"), false, false);
             }
         } else {
             addExistingRows();
@@ -506,7 +507,8 @@ public class VolumeDialogImpl implements VolumeDialog {
         row.anim = null;
 
         row.icon = row.view.findViewById(R.id.volume_row_icon);
-        row.icon.setImageResource(iconRes);
+        Drawable iconResDrawable = mSysUIContext.getResources().getDrawable(iconRes);
+        row.icon.setImageDrawable(iconResDrawable);
         if (row.stream != AudioSystem.STREAM_ACCESSIBILITY) {
             row.icon.setOnClickListener(v -> {
                 Events.writeEvent(mContext, Events.EVENT_ICON_CLICK, row.stream, row.iconState);
@@ -564,10 +566,10 @@ public class VolumeDialogImpl implements VolumeDialog {
             mExpandRows.setOnClickListener(v -> {
                 rescheduleTimeoutH();
                 if (!mExpanded) {
-                    addRow(AudioManager.STREAM_RING, R.drawable.ic_volume_ringer,
-                            R.drawable.ic_volume_ringer_mute, true, false);
-                    addRow(AudioManager.STREAM_ALARM, R.drawable.ic_volume_alarm,
-                            R.drawable.ic_volume_alarm_mute, true, false);
+                    addRow(AudioManager.STREAM_RING, mSysUIR.drawable("ic_volume_ringer"),
+                            mSysUIR.drawable("ic_volume_ringer_mute"), true, false);
+                    addRow(AudioManager.STREAM_ALARM, mSysUIR.drawable("ic_volume_alarm"),
+                            mSysUIR.drawable("ic_volume_alarm_mute"), true, false);
                     updateAllActiveRows();
                     mExpanded = true;
                     updateOutputSwitcherVisibility();
@@ -969,15 +971,18 @@ public class VolumeDialogImpl implements VolumeDialog {
                     || (mState.zenMode == Global.ZEN_MODE_IMPORTANT_INTERRUPTIONS
                         && mState.disallowRinger);
             enableRingerViewsH(!isZenMuted);
+            Drawable ringerDrawable;
             switch (mState.ringerModeInternal) {
                 case AudioManager.RINGER_MODE_VIBRATE:
-                    mRingerIcon.setImageResource(R.drawable.ic_volume_ringer_vibrate);
+                    ringerDrawable = mSysUIContext.getResources().getDrawable(
+                        mSysUIR.drawable("ic_volume_ringer_vibrate"));
                     addAccessibilityDescription(mRingerIcon, RINGER_MODE_VIBRATE,
                             mSysUIContext.getString(mSysUIR.string("volume_ringer_hint_mute")));
                     mRingerIcon.setTag(Events.ICON_STATE_VIBRATE);
                     break;
                 case AudioManager.RINGER_MODE_SILENT:
-                    mRingerIcon.setImageResource(R.drawable.ic_volume_ringer_mute);
+                    ringerDrawable = mSysUIContext.getResources().getDrawable(
+                        mSysUIR.drawable("ic_volume_ringer_mute"));
                     mRingerIcon.setTag(Events.ICON_STATE_MUTE);
                     addAccessibilityDescription(mRingerIcon, RINGER_MODE_SILENT,
                             mSysUIContext.getString(mSysUIR.string("volume_ringer_hint_unmute")));
@@ -986,12 +991,14 @@ public class VolumeDialogImpl implements VolumeDialog {
                 default:
                     boolean muted = (mAutomute && ss.level == 0) || ss.muted;
                     if (!isZenMuted && muted) {
-                        mRingerIcon.setImageResource(R.drawable.ic_volume_ringer_mute);
+                        ringerDrawable = mSysUIContext.getResources().getDrawable(
+                            mSysUIR.drawable("ic_volume_ringer_mute"));
                         addAccessibilityDescription(mRingerIcon, RINGER_MODE_NORMAL,
                                 mSysUIContext.getString(mSysUIR.string("volume_ringer_hint_unmute")));
                         mRingerIcon.setTag(Events.ICON_STATE_MUTE);
                     } else {
-                        mRingerIcon.setImageResource(R.drawable.ic_volume_ringer);
+                        ringerDrawable = mSysUIContext.getResources().getDrawable(
+                            mSysUIR.drawable("ic_volume_ringer"));
                         if (mController.hasVibrator()) {
                             addAccessibilityDescription(mRingerIcon, RINGER_MODE_NORMAL,
                                     mSysUIContext.getString(mSysUIR.string("volume_ringer_hint_vibrate")));
@@ -1003,6 +1010,7 @@ public class VolumeDialogImpl implements VolumeDialog {
                     }
                     break;
             }
+            mRingerIcon.setImageDrawable(ringerDrawable);
         }
     }
 
@@ -1083,7 +1091,8 @@ public class VolumeDialogImpl implements VolumeDialog {
             if (!ss.dynamic) continue;
             mDynamic.put(stream, true);
             if (findRow(stream) == null) {
-                addRow(stream, R.drawable.ic_volume_remote, R.drawable.ic_volume_remote_mute, true,
+                addRow(stream, mSysUIR.drawable("R.drawable.ic_volume_remote"),
+                        mSysUIR.drawable("R.drawable.ic_volume_remote_mute"), true,
                         false, true);
             }
         }
@@ -1159,19 +1168,20 @@ public class VolumeDialogImpl implements VolumeDialog {
         row.icon.setEnabled(iconEnabled);
         row.icon.setAlpha(iconEnabled ? 1 : 0.5f);
         final int iconRes =
-                isRingVibrate ? R.drawable.ic_volume_ringer_vibrate
+                isRingVibrate ? mSysUIR.drawable("ic_volume_ringer_vibrate")
                 : isRingSilent || zenMuted ? row.iconMuteRes
                 : ss.routedToBluetooth ?
-                        (ss.muted ? R.drawable.ic_volume_media_bt_mute
-                                : R.drawable.ic_volume_media_bt)
+                        (ss.muted ? mSysUIR.drawable("ic_volume_media_bt_mute")
+                                : mSysUIR.drawable("ic_volume_media_bt"))
                 : mAutomute && ss.level == 0 ? row.iconMuteRes
                 : isMuted ? row.iconMuteRes : row.iconRes;
-        row.icon.setImageResource(iconRes);
+        Drawable iconResDrawable = mSysUIContext.getResources().getDrawable(iconRes);
+        row.icon.setImageDrawable(iconResDrawable);
         row.iconState =
-                iconRes == R.drawable.ic_volume_ringer_vibrate ? Events.ICON_STATE_VIBRATE
-                : (iconRes == R.drawable.ic_volume_media_bt_mute || iconRes == row.iconMuteRes)
+                iconRes == mSysUIR.drawable("ic_volume_ringer_vibrate") ? Events.ICON_STATE_VIBRATE
+                : (iconRes == mSysUIR.drawable("ic_volume_media_bt_mute") || iconRes == row.iconMuteRes)
                         ? Events.ICON_STATE_MUTE
-                : (iconRes == R.drawable.ic_volume_media_bt || iconRes == row.iconRes)
+                : (iconRes == mSysUIR.drawable("ic_volume_media_bt") || iconRes == row.iconRes)
                         ? Events.ICON_STATE_UNMUTE
                 : Events.ICON_STATE_UNKNOWN;
         if (iconEnabled) {
