@@ -3,7 +3,7 @@ android_app {
     name: "AospPanel",
 
     static_libs: [
-        "ResMini",
+        "VolumePluginCommon",
     ],
 
     resource_dirs: ["res"],

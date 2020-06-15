@@ -73,7 +73,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import co.potatoproject.systemui.resmini.*;
+import co.potatoproject.plugin.volume.common.*;
 
 import co.potatoproject.plugin.volume.oreo.R;
 

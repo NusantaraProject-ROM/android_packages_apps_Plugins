@@ -46,7 +46,7 @@
             android:translationZ="@dimen/volume_dialog_elevation"
             android:clipToPadding="false"
             android:background="@drawable/rounded_bg_full">
-        <co.potatoproject.systemui.resmini.AlphaOptimizedImageButton
+        <co.potatoproject.plugin.volume.common.AlphaOptimizedImageButton
                 android:id="@+id/ringer_icon"
                 style="@style/VolumeButtons"
                 android:background="@drawable/rounded_ripple"
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:background="@drawable/rounded_bg_bottom_background">
-                <co.potatoproject.systemui.resmini.ExpandableIndicator
+                <co.potatoproject.plugin.volume.common.ExpandableIndicator
                     android:id="@+id/expandable_indicator"
                     android:layout_width="@dimen/volume_dialog_tap_target_size"
                     android:layout_height="@dimen/volume_dialog_tap_target_size"
@@ -111,7 +111,7 @@
                     android:padding="16dp"
                     android:rotation="90" />
                     
-                <co.potatoproject.systemui.resmini.AlphaOptimizedImageButton
+                <co.potatoproject.plugin.volume.common.AlphaOptimizedImageButton
                     android:id="@+id/media_output"
                     android:src="@drawable/ic_bluetooth_audio"
                     android:layout_width="@dimen/volume_dialog_tap_target_size"
@@ -138,7 +138,7 @@
             android:clipToPadding="false"
             android:translationZ="@dimen/volume_dialog_elevation"
             android:background="@drawable/rounded_bg_full">
-            <co.potatoproject.systemui.resmini.CaptionsToggleImageButton
+            <co.potatoproject.plugin.volume.common.CaptionsToggleImageButton
                 android:id="@+id/odi_captions_icon"
                 android:src="@drawable/ic_volume_odi_captions_disabled"
                 style="@style/VolumeButtons"

@@ -52,7 +52,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.Volume.Header" />
-        <co.potatoproject.systemui.resmini.ExpandableIndicator
+        <co.potatoproject.plugin.volume.common.ExpandableIndicator
             android:id="@+id/volume_expand_button"
             android:layout_width="@dimen/volume_button_size"
             android:layout_height="@dimen/volume_button_size"

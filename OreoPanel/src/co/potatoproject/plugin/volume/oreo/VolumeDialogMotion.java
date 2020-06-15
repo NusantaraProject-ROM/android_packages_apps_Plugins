@@ -32,8 +32,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.PathInterpolator;
 
-import co.potatoproject.systemui.resmini.D;
-import co.potatoproject.systemui.resmini.Utils;
+import co.potatoproject.plugin.volume.common.D;
+import co.potatoproject.plugin.volume.common.Utils;
 
 public class VolumeDialogMotion {
     private static final String TAG = Utils.logTag(VolumeDialogMotion.class);

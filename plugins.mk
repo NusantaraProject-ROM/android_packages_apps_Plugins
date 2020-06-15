@@ -1,5 +1,5 @@
 PRODUCT_PACKAGES += \
 	AospPanel \
-	FancyPanel \
+	CompactPanel \
 	OreoPanel \
-	TogglePanel
+	TiledPanel

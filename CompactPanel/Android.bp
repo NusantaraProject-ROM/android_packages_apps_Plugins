@@ -1,6 +1,6 @@
 android_app {
 
-    name: "OreoPanel",
+    name: "CompactPanel",
 
     static_libs: ["VolumePluginCommon"],
 

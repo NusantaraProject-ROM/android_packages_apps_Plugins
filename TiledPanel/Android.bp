@@ -1,6 +1,6 @@
 android_app {
 
-    name: "OreoPanel",
+    name: "TiledPanel",
 
     static_libs: ["VolumePluginCommon"],
 
