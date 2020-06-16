@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- copyright (c) 2006 the android open source project
+
+     licensed under the apache license, version 2.0 (the "license");
+     you may not use this file except in compliance with the license.
+     you may obtain a copy of the license at
+
+          http://www.apache.org/licenses/license-2.0
+
+     unless required by applicable law or agreed to in writing, software
+     distributed under the license is distributed on an "as is" basis,
+     without warranties or conditions of any kind, either express or implied.
+     see the license for the specific language governing permissions and
+     limitations under the license.
+-->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="VolumeButtons" parent="@android:style/Widget.Material.Button.Borderless">
+        <item name="android:background">@drawable/btn_borderless_rect</item>
+    </style>
+    <style name="TextAppearance" />
+    <style name="TextAppearance.Volume">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:fontFamily">@*android:string/config_bodyFontFamily</item>
+    </style>
+    <style name="TextAppearance.Volume.Header">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+</resources>

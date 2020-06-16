@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="plugin_label">Oreo panel</string>
+
+    <string name="volume_dialog_accessibility_shown_message">%s volume controls shown. Swipe up to dismiss.</string>
+    <string name="volume_dialog_accessibility_dismissed_message">Volume controls hidden</string>
+</resources>

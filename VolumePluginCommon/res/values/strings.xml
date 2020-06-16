@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_volume_settings">Sound settings</string>
+    <string name="volume_odi_captions_tip">Automatically caption media</string>
+    <string name="accessibility_volume_close_odi_captions_tip">Close captions tip</string>
+    <string name="accessibility_quick_settings_expand">Open quick settings.</string>
+    <string name="accessibility_quick_settings_collapse">Close quick settings.</string>
+</resources>

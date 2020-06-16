@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <dimen name="volume_dialog_panel_width">58dp</dimen>
+
+    <!-- volume_dialog_panel_width * 4 -->
+    <dimen name="volume_dialog_panel_height">232dp</dimen>
+
+    <dimen name="volume_dialog_ringer_size">58dp</dimen>
+
+    <dimen name="volume_dialog_ringer_icon_padding">17dp</dimen>
+
+    <dimen name="volume_dialog_caption_size">58dp</dimen>
+
+    <dimen name="volume_dialog_slider_margin_bottom">@dimen/volume_dialog_slider_margin_top</dimen>
+
+    <dimen name="volume_dialog_slider_margin_top">24dp</dimen>
+</resources>
