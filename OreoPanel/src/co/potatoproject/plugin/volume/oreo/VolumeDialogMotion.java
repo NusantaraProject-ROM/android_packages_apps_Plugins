@@ -30,6 +30,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.view.animation.PathInterpolator;
 
 import co.potatoproject.plugin.volume.common.D;
@@ -41,8 +43,10 @@ public class VolumeDialogMotion {
     private static final float ANIMATION_SCALE = 1.0f;
     private static final int PRE_DISMISS_DELAY = 50;
 
-    private final Dialog mDialog;
+    private final View mDialog;
     private final View mDialogView;
+    private final WindowManager mWindowManager;
+    private final LayoutParams mWindowParams;
     private final ViewGroup mContents;  // volume rows + zen footer
     private final View mChevron;
     private final Handler mHandler = new Handler();
@@ -54,28 +58,15 @@ public class VolumeDialogMotion {
     private ValueAnimator mChevronPositionAnimator;
     private ValueAnimator mContentsPositionAnimator;
 
-    public VolumeDialogMotion(Dialog dialog, View dialogView, ViewGroup contents, View chevron,
-            Callback callback) {
+    public VolumeDialogMotion(View dialog, WindowManager wm, LayoutParams lp, View dialogView,
+            ViewGroup contents, View chevron, Callback callback) {
         mDialog = dialog;
         mDialogView = dialogView;
         mContents = contents;
         mChevron = chevron;
         mCallback = callback;
-        mDialog.setOnDismissListener(new OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                if (D.BUG) Log.d(TAG, "mDialog.onDismiss");
-            }
-        });
-        mDialog.setOnShowListener(new OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                if (D.BUG) Log.d(TAG, "mDialog.onShow");
-                final int h = mDialogView.getHeight();
-                mDialogView.setTranslationY(-h);
-                startShowAnimation();
-            }
-        });
+        mWindowManager = wm;
+        mWindowParams = lp;
     }
 
     public boolean isAnimating() {
@@ -117,7 +108,9 @@ public class VolumeDialogMotion {
             return;
         }
         if (D.BUG) Log.d(TAG, "mDialog.show()");
-        mDialog.show();
+        final int h = mDialogView.getHeight();
+        mDialogView.setTranslationY(-h);
+        startShowAnimation();
     }
 
     private int chevronDistance() {
@@ -136,6 +129,11 @@ public class VolumeDialogMotion {
                 .setDuration(scaledDuration(300))
                 .setInterpolator(new LogDecelerateInterpolator())
                 .setListener(null)
+                .withStartAction(() -> {
+                    if(!mDialog.isShown()) {
+                        mWindowManager.addView(mDialog, mWindowParams);
+                    }
+                })
                 .setUpdateListener(animation -> {
                     if (mChevronPositionAnimator != null) {
                         final float v = (Float) mChevronPositionAnimator.getAnimatedValue();
@@ -242,7 +240,9 @@ public class VolumeDialogMotion {
                             @Override
                             public void run() {
                                 if (D.BUG) Log.d(TAG, "mDialog.dismiss()");
-                                mDialog.dismiss();
+                                if(mDialog.isShown()){
+                                    mWindowManager.removeViewImmediate(mDialog);
+                                }
                                 onComplete.run();
                                 setDismissing(false);
                             }
