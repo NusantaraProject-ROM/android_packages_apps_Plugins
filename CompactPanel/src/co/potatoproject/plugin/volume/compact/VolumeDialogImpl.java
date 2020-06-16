@@ -154,7 +154,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     private CaptionsToggleImageButton mODICaptionsIcon;
     private View mMediaOutputContainer;
     private ImageButton mMediaOutputIcon;
-    private LinearLayout mButtonsGroup;
+    private FrameLayout mButtonsGroup;
     private View mExtraButtons;
     private View mExpandRowsView;
     private ExpandableIndicator mExpandRows;
@@ -332,24 +332,30 @@ public class VolumeDialogImpl implements VolumeDialog {
                 (LinearLayout.LayoutParams) mDialog.findViewById(R.id.main_frame).getLayoutParams();
         LinearLayout.LayoutParams buttonsGroupLP =
                 (LinearLayout.LayoutParams) mButtonsGroup.getLayoutParams();
+        FrameLayout.LayoutParams baseButtonsLP =
+                (FrameLayout.LayoutParams) mDialog.findViewById(R.id.base_buttons).getLayoutParams();
+        FrameLayout.LayoutParams extraButtonsLP =
+                (FrameLayout.LayoutParams) mExtraButtons.getLayoutParams();
 
         dialogViewLP.gravity = Gravity.CENTER_VERTICAL;
         if (!isAudioPanelOnLeftSide()) {
             mainFrameLP.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
             buttonsGroupLP.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
             mExpandRows.setRotation(90);
+            baseButtonsLP.gravity = Gravity.RIGHT;
+            extraButtonsLP.gravity = Gravity.LEFT;
         } else {
-            mButtonsGroup.removeViewAt(0);
-            mButtonsGroup.addView(mExtraButtons, 1);
             mainFrameLP.gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
             buttonsGroupLP.gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
             mExpandRows.setRotation(-90);
+            baseButtonsLP.gravity = Gravity.LEFT;
+            extraButtonsLP.gravity = Gravity.RIGHT;
         }
         mDialogView.setLayoutParams(dialogViewLP);
         mDialog.findViewById(R.id.main_frame).setLayoutParams(mainFrameLP);
         mButtonsGroup.setLayoutParams(buttonsGroupLP);
-
-        mContext.getTheme().applyStyle(mContext.getThemeResId(), true);
+        mDialog.findViewById(R.id.base_buttons).setLayoutParams(baseButtonsLP);
+        mExtraButtons.setLayoutParams(extraButtonsLP);
 
         updateRowsH(getActiveRow());
         updatePanelOnMode();
@@ -569,7 +575,8 @@ public class VolumeDialogImpl implements VolumeDialog {
             mExpandRows.setOnLongClickListener(v -> {
                 rescheduleTimeoutH();
                 Events.writeEvent(mContext, Events.EVENT_SETTINGS_CLICK);
-                Intent intent = new Intent(Settings.Panel.ACTION_VOLUME);
+                Intent intent = new Intent(Settings.ACTION_SOUND_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 dismissH(DISMISS_REASON_SETTINGS_CLICKED);
                 PluginDependency.get(this, ActivityStarter.class).startActivity(intent,
                         true /* dismissShade */);
@@ -751,26 +758,13 @@ public class VolumeDialogImpl implements VolumeDialog {
                 .setDuration(350)
                 .setInterpolator(new SystemUIInterpolators.LogAccelerateInterpolator());
 
-        ViewPropertyAnimator extraAnimator = mExtraButtons.animate()
-                .setDuration(250)
-                .setInterpolator(new SystemUIInterpolators.LogAccelerateInterpolator())
-                .withStartAction(() -> {
-                    if(mode == PanelMode.EXPANDED) {
-                        mExtraButtons.setVisibility(VISIBLE);
-                    }
-                })
-                .withEndAction(() -> {
-                    if(mode != PanelMode.EXPANDED) {
-                        mExtraButtons.setVisibility(GONE);
-                    }
-                });
         int rowSidePadding = mContext.getResources().getDimensionPixelSize(R.dimen.volume_dialog_row_side_padding);
 
         if(mode != PanelMode.MINI) {
             if(mode == PanelMode.EXPANDED) {
-                extraAnimator.alpha(1);
+                mExtraButtons.setVisibility(VISIBLE);
             } else if(mode == PanelMode.COLLAPSED) {
-                extraAnimator.alpha(0);
+                mExtraButtons.setVisibility(GONE);
             }
             main.setMinimumWidth(mContext.getResources().getDimensionPixelSize(R.dimen.volume_dialog_panel_width));
             mButtonsGroup.setVisibility(VISIBLE);

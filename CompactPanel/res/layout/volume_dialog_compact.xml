@@ -77,25 +77,27 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/buttons_group"
-            android:layout_width="wrap_content"
+            android:layout_width="136dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/volume_dialog_spacer"
             android:clipToPadding="false"
             android:layout_gravity="right|center_vertical"
             android:clipChildren="false"
             android:orientation="horizontal"
+            android:animateLayoutChanges="true"
             android:visibility="invisible">
 
             <LinearLayout
                 android:id="@+id/extra_buttons"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/volume_dialog_ringer_size"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_bg_full"
                 android:translationZ="@dimen/volume_dialog_fancy_elevation"
                 android:layout_marginLeft="@dimen/volume_dialog_spacer"
                 android:layout_marginRight="@dimen/volume_dialog_spacer"
+                android:layout_gravity="left"
                 android:orientation="vertical">
 
                 <FrameLayout
@@ -135,10 +137,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/base_buttons"
                 android:layout_width="@dimen/volume_dialog_ringer_size"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_bg_full"
                 android:translationZ="@dimen/volume_dialog_fancy_elevation"
+                android:layout_gravity="right"
                 android:orientation="vertical">
                 
                 <FrameLayout
@@ -182,7 +186,7 @@
                         android:rotation="90" />
                 </FrameLayout>
             </LinearLayout>
-        </LinearLayout>
+        </FrameLayout>
 
     </LinearLayout>
 
