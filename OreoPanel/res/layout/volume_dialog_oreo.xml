@@ -10,7 +10,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -22,6 +22,7 @@
         android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
         android:layout_margin="@dimen/volume_dialog_panel_transparent_padding_right">
         <FrameLayout
             android:id="@+id/ringer"
@@ -94,4 +95,4 @@
             </FrameLayout>
         </FrameLayout>
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

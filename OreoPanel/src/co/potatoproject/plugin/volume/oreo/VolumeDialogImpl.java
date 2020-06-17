@@ -229,7 +229,6 @@ public class VolumeDialogImpl implements VolumeDialog {
         mWindowParams.type = mWindowType;
         mWindowParams.format = PixelFormat.TRANSLUCENT;
         mWindowParams.windowAnimations = -1;
-        mWindowParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
         mDialog = LayoutInflater.from(mContext).inflate(R.layout.volume_dialog_oreo, (ViewGroup) null, false);
 
         mDialog.setOnTouchListener((v, event) -> {
