@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.pm.PackageManager.NameNotFoundException;
 
+import java.util.HashMap;
+
 public class SysUIR {
     private Context mContext;
+    private HashMap<String, Integer> mCachedIds = new HashMap<String, Integer>();
 
     public SysUIR(Context context) {
         mContext = context;
@@ -48,12 +51,20 @@ public class SysUIR {
     }
     
     private int sysuiResId(String resType, String resName, Context context) {
-        try {
-            Resources res = context.getPackageManager().getResourcesForApplication("com.android.systemui");
-            return res.getIdentifier(resName, resType, "com.android.systemui");
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-            return 0;
+        if(mCachedIds.containsKey(resName)) {
+            return mCachedIds.get(resName);
+        } else {
+            int resId = 0;
+            try {
+                Resources res = context.getPackageManager().getResourcesForApplication("com.android.systemui");
+                resId = res.getIdentifier(resName, resType, "com.android.systemui");
+            } catch (NameNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            mCachedIds.put(resName, resId);
+
+            return resId;
         }
     }
 }
