@@ -1455,7 +1455,7 @@ public class VolumeDialogImpl implements VolumeDialog {
             }
         } else {
             if (D.BUG) Log.d(TAG, "recheckH " + row.stream);
-            updateVolumeRowH(row, new StreamSwitchButton());
+            updateVolumeRowH(row, getActiveButton());
         }
     }
 
