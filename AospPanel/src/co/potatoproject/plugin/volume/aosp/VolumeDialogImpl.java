@@ -1393,7 +1393,7 @@ public class VolumeDialogImpl implements VolumeDialog {
             return ss.remoteLabel;
         }
         try {
-            return mContext.getResources().getString(ss.name);
+            return mSysUIContext.getString(ss.name);
         } catch (Resources.NotFoundException e) {
             Slog.e(TAG, "Can't find translation for stream " + ss);
             return "";
