@@ -628,7 +628,7 @@ public class VolumeDialogImpl implements VolumeDialog {
             mRingerIcon.setAccessibilityLiveRegion(ACCESSIBILITY_LIVE_REGION_POLITE);
             mRingerIcon.setOnClickListener(v -> {
                 rescheduleTimeoutH();
-                Prefs.putBoolean(mContext, Prefs.Key.TOUCHED_RINGER_TOGGLE, true);
+                Prefs.putBoolean(mSysUIContext, Prefs.Key.TOUCHED_RINGER_TOGGLE, true);
                 final StreamState ss = mState.states.get(AudioManager.STREAM_RING);
                 if (ss == null) {
                     return;
@@ -687,7 +687,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     }
 
     private void maybeShowToastH(int newRingerMode) {
-        int seenToastCount = Prefs.getInt(mContext, Prefs.Key.SEEN_RINGER_GUIDANCE_COUNT, 0);
+        int seenToastCount = Prefs.getInt(mSysUIContext, Prefs.Key.SEEN_RINGER_GUIDANCE_COUNT, 0);
 
         if (seenToastCount > VolumePrefs.SHOW_RINGER_TOAST_COUNT) {
             return;
@@ -714,7 +714,7 @@ public class VolumeDialogImpl implements VolumeDialog {
 
         Toast.makeText(mContext, toastText, Toast.LENGTH_SHORT).show();
         seenToastCount++;
-        Prefs.putInt(mContext, Prefs.Key.SEEN_RINGER_GUIDANCE_COUNT, seenToastCount);
+        Prefs.putInt(mSysUIContext, Prefs.Key.SEEN_RINGER_GUIDANCE_COUNT, seenToastCount);
     }
 
     protected void updateRingerH() {

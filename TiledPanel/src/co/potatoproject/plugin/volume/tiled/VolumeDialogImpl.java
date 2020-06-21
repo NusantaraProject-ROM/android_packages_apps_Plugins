@@ -711,7 +711,7 @@ public class VolumeDialogImpl implements VolumeDialog {
             mRingerIcon.setAccessibilityLiveRegion(ACCESSIBILITY_LIVE_REGION_POLITE);
             mRingerIcon.setOnClickListener(v -> {
                 rescheduleTimeoutH();
-                Prefs.putBoolean(mContext, Prefs.Key.TOUCHED_RINGER_TOGGLE, true);
+                Prefs.putBoolean(mSysUIContext, Prefs.Key.TOUCHED_RINGER_TOGGLE, true);
                 final StreamState ss = mState.states.get(AudioManager.STREAM_RING);
                 if (ss == null) {
                     return;
@@ -785,7 +785,7 @@ public class VolumeDialogImpl implements VolumeDialog {
                 .setStartDelay(DIALOG_SHOW_ANIMATION_DURATION)
                 .withEndAction(() -> {
                     if (D.BUG) Log.d(TAG, "tool:checkODICaptionsTooltip() putBoolean true");
-                    Prefs.putBoolean(mContext,
+                    Prefs.putBoolean(mSysUIContext,
                             Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, true);
                     mHasSeenODICaptionsTooltip = true;
                     if (mODICaptionsIcon != null) {
@@ -872,7 +872,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     }
 
     private void maybeShowToastH(int newRingerMode) {
-        int seenToastCount = Prefs.getInt(mContext, Prefs.Key.SEEN_RINGER_GUIDANCE_COUNT, 0);
+        int seenToastCount = Prefs.getInt(mSysUIContext, Prefs.Key.SEEN_RINGER_GUIDANCE_COUNT, 0);
 
         if (seenToastCount > VolumePrefs.SHOW_RINGER_TOAST_COUNT) {
             return;
@@ -899,7 +899,7 @@ public class VolumeDialogImpl implements VolumeDialog {
 
         Toast.makeText(mContext, toastText, Toast.LENGTH_SHORT).show();
         seenToastCount++;
-        Prefs.putInt(mContext, Prefs.Key.SEEN_RINGER_GUIDANCE_COUNT, seenToastCount);
+        Prefs.putInt(mSysUIContext, Prefs.Key.SEEN_RINGER_GUIDANCE_COUNT, seenToastCount);
     }
 
     public void show(int reason) {
@@ -938,7 +938,7 @@ public class VolumeDialogImpl implements VolumeDialog {
                         }
                     })
                     .withEndAction(() -> {
-                        if (!Prefs.getBoolean(mContext, Prefs.Key.TOUCHED_RINGER_TOGGLE, false)) {
+                        if (!Prefs.getBoolean(mSysUIContext, Prefs.Key.TOUCHED_RINGER_TOGGLE, false)) {
                             if (mRingerIcon != null) {
                                 mRingerIcon.postOnAnimationDelayed(
                                         getSinglePressFor(mRingerIcon), 1500);
