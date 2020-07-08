@@ -63,6 +63,10 @@ public class SysUIR {
         return sysuiResId("string", resName);
     }
 
+    public int dimen(String resName) {
+        return sysuiResId("dimen", resName);
+    }
+
     private int sysuiResId(String resType, String resName) {
         return sysuiResId(resType, resName, mContext);
     }
