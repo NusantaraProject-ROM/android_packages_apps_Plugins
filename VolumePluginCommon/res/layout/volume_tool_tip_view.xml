@@ -16,7 +16,7 @@
   ~ limitations under the License
   -->
 
-<com.android.systemui.volume.VolumeToolTipView
+<co.potatoproject.plugin.volume.common.VolumeToolTipView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tooltip_view"
     android:layout_height="wrap_content"
@@ -61,4 +61,4 @@
         android:layout_marginLeft="-2dp"
         android:layout_gravity="center_vertical"/>
 
-</com.android.systemui.volume.VolumeToolTipView>
+</co.potatoproject.plugin.volume.common.VolumeToolTipView>
