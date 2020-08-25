@@ -34,6 +34,8 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 import static co.potatoproject.plugin.volume.common.Events.DISMISS_REASON_SETTINGS_CLICKED;
 
+import android.database.ContentObserver;
+import android.os.UserHandle;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
@@ -95,7 +97,6 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import co.potatoproject.plugin.volume.common.*;
 
 import co.potatoproject.plugin.volume.aosp.R;
@@ -187,6 +188,8 @@ public class VolumeDialogImpl implements VolumeDialog {
 
     private boolean mLeftVolumeRocker;
 
+    private SettingsObserver settingsObserver;
+
     public VolumeDialogImpl() {}
 
     @Override
@@ -202,7 +205,8 @@ public class VolumeDialogImpl implements VolumeDialog {
         mShowActiveStreamOnly = showActiveStreamOnly();
         mHasSeenODICaptionsTooltip =
                 Prefs.getBoolean(sysuiContext, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, false);
-        mLeftVolumeRocker = mSysUIContext.getResources().getBoolean(mSysUIR.bool("config_audioPanelOnLeftSide"));
+        settingsObserver = new SettingsObserver(mHandler);
+        settingsObserver.observe();
     }
 
     public void init(int windowType, Callback callback) {
@@ -218,6 +222,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     public void destroy() {
         mController.removeCallback(mControllerCallbackH);
         mHandler.removeCallbacksAndMessages(null);
+        settingsObserver.unobserve();
     }
 
     private void initDialog() {
@@ -309,7 +314,7 @@ public class VolumeDialogImpl implements VolumeDialog {
         LinearLayout.LayoutParams captionsLP =
                 (LinearLayout.LayoutParams) mODICaptionsView.getLayoutParams();
 
-        if(!isAudioPanelOnLeftSide()) {
+        if(!mLeftVolumeRocker) {
             mainLP.gravity = Gravity.RIGHT;
             ringerLP.gravity = Gravity.RIGHT;
             mExpandRows.setRotation(90);
@@ -344,6 +349,8 @@ public class VolumeDialogImpl implements VolumeDialog {
             if (!AudioSystem.isSingleVolume(mContext)) {
                 addRow(AudioManager.STREAM_RING,
                         mSysUIR.drawable("ic_volume_ringer"), mSysUIR.drawable("ic_volume_ringer_mute"), true, false);
+                addRow(AudioManager.STREAM_RING,
+                        mSysUIR.drawable("ic_volume_notification"), mSysUIR.drawable("ic_volume_notification_mute"), true, false);
                 addRow(STREAM_ALARM,
                         mSysUIR.drawable("ic_alarm"), mSysUIR.drawable("ic_volume_alarm_mute"), true, false);
                 addRow(AudioManager.STREAM_VOICE_CALL,
@@ -362,6 +369,36 @@ public class VolumeDialogImpl implements VolumeDialog {
         initRingerH();
         initSettingsH();
         initODICaptionsH();
+
+    }
+
+
+    private class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void unobserve() {
+            mContext.getContentResolver().unregisterContentObserver(this);
+        }
+
+        void observe() {
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.AUDIO_PANEL_VIEW_POSITION), false, this, UserHandle.USER_ALL);
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            initDialog();
+            updateRowsH(getActiveRow());
+            update();
+        }
+
+        public void update() {
+             mLeftVolumeRocker = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.AUDIO_PANEL_VIEW_POSITION, 0, UserHandle.USER_CURRENT) == 1;
+             initDialog();
+        }
     }
 
     private final OnComputeInternalInsetsListener mInsetsListener = internalInsetsInfo -> {
@@ -422,8 +459,8 @@ public class VolumeDialogImpl implements VolumeDialog {
         if (D.BUG) Slog.d(TAG, "Adding row for stream " + stream);
         VolumeRow row = new VolumeRow();
         initRow(row, stream, iconRes, iconMuteRes, important, defaultStream);
-        if(!isAudioPanelOnLeftSide()){
-            mDialogRowsView.addView(row.view);
+        if(!mLeftVolumeRocker){
+            mDialogRowsView.addView(row.view, 0);
         } else {
             mDialogRowsView.addView(row.view);
         }
@@ -436,7 +473,7 @@ public class VolumeDialogImpl implements VolumeDialog {
             final VolumeRow row = mRows.get(i);
             initRow(row, row.stream, row.iconRes, row.iconMuteRes, row.important,
                     row.defaultStream);
-            if(!isAudioPanelOnLeftSide()){
+            if(!mLeftVolumeRocker){
                 mDialogRowsView.addView(row.view, 0);
             } else {
                 mDialogRowsView.addView(row.view);
@@ -832,7 +869,7 @@ public class VolumeDialogImpl implements VolumeDialog {
         mDialog.getViewTreeObserver().addOnComputeInternalInsetsListener(mInsetsListener);
 
         if(!mShowing && !mDialog.isShown()) {
-            if (!isLandscape()) mDialogView.setTranslationX((mDialogView.getWidth() / 2.0f)*(isAudioPanelOnLeftSide() ? -1 : 1));
+            if (!isLandscape()) mDialogView.setTranslationX((mDialogView.getWidth() / 2.0f)*(mLeftVolumeRocker ? -1 : 1));
             mDialogView.setAlpha(0);
             mDialogView.animate()
                     .alpha(1)
@@ -923,7 +960,7 @@ public class VolumeDialogImpl implements VolumeDialog {
                     mExpandRows.setExpanded(mExpanded);
                     tryToRemoveCaptionsTooltip();
                 }, 50));
-        if (!isLandscape()) animator.translationX((mDialogView.getWidth() / 2.0f)*(isAudioPanelOnLeftSide() ? -1 : 1));
+        if (!isLandscape()) animator.translationX((mDialogView.getWidth() / 2.0f)*(mLeftVolumeRocker ? -1 : 1));
         animator.start();
         checkODICaptionsTooltip(true);
         mController.notifyVisible(false);
@@ -941,6 +978,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     }
 
     private boolean shouldBeVisibleH(VolumeRow row, VolumeRow activeRow) {
+
         boolean isActive = row.stream == activeRow.stream;
 
         if (isActive) {
@@ -1590,10 +1628,6 @@ public class VolumeDialogImpl implements VolumeDialog {
             rescheduleTimeoutH();
             return super.onRequestSendAccessibilityEvent(host, child, event);
         }
-    }
-
-    private boolean isAudioPanelOnLeftSide() {
-        return mLeftVolumeRocker;
     }
 
     private static class VolumeRow {

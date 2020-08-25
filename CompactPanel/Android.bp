@@ -2,7 +2,9 @@ android_app {
 
     name: "CompactPanel",
 
-    static_libs: ["VolumePluginCommon"],
+    static_libs: [
+        "VolumePluginCommon",
+    ],
 
     resource_dirs: ["res"],
 
