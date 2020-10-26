@@ -75,10 +75,10 @@ public class VolumeDialog extends AlertDialog {
     public static void setShowForAllUsers(Dialog dialog, boolean show) {
         if (show) {
             dialog.getWindow().getAttributes().privateFlags |=
-                    WindowManager.LayoutParams.PRIVATE_FLAG_SHOW_FOR_ALL_USERS;
+                    WindowManager.LayoutParams.SYSTEM_FLAG_SHOW_FOR_ALL_USERS;
         } else {
             dialog.getWindow().getAttributes().privateFlags &=
-                    ~WindowManager.LayoutParams.PRIVATE_FLAG_SHOW_FOR_ALL_USERS;
+                    ~WindowManager.LayoutParams.SYSTEM_FLAG_SHOW_FOR_ALL_USERS;
         }
     }
 
