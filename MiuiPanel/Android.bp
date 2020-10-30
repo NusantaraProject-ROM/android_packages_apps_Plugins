@@ -2,10 +2,7 @@ android_app {
 
     name: "MiuiPanel",
 
-    static_libs: [
-        "VolumePluginCommon",
-        "org.lineageos.platform.internal",
-    ],
+    static_libs: ["VolumePluginCommon"],
 
     resource_dirs: ["res"],
 

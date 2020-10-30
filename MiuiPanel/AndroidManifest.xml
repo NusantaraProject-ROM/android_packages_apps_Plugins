@@ -18,7 +18,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.synth.plugin.volume.miui">
+    package="com.kangos.plugin.volume.miui">
 
     <uses-permission android:name="com.android.systemui.permission.PLUGIN" />
 
@@ -33,7 +33,7 @@
 
         <provider
             android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-            android:authorities="com.synth.plugin.volume.miui"
+            android:authorities="com.kangos.plugin.volume.miui"
             tools:replace="android:authorities"
             android:exported="false"
             android:multiprocess="true" />

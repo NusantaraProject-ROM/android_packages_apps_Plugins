@@ -40,34 +40,18 @@
         android:orientation="vertical"
         android:clipToPadding="false">
 
-        <LinearLayout
-            android:id="@+id/main_frame"
+          <LinearLayout
+            android:id="@+id/main"
             android:minWidth="@dimen/volume_dialog_miui_panel_width"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
             android:layout_gravity="right"
-            android:orientation="horizontal"
-            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:translationZ="@dimen/volume_dialog_elevation"
             android:clipChildren="false"
-            android:animateLayoutChanges="true">
-            <include layout="@layout/synth_media_card"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:animateLayoutChanges="true"/>
-            <LinearLayout
-                android:id="@+id/main"
-                android:minWidth="@dimen/volume_dialog_miui_panel_width"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_gravity="right"
-                android:orientation="vertical"
-                android:translationZ="@dimen/volume_dialog_elevation"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:background="@drawable/volume_dialog_background"
-                android:animateLayoutChanges="true" >
+            android:clipToPadding="false"
+            android:background="@drawable/volume_dialog_background">
                 <LinearLayout
                     android:id="@+id/volume_dialog_rows"
                     android:layout_width="wrap_content"
@@ -79,7 +63,6 @@
                     android:animateLayoutChanges="true">
                         <!-- volume rows added and removed here! :-) -->
                 </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

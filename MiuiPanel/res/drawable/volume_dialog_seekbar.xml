@@ -21,7 +21,7 @@
         <shape android:shape="rectangle">
             <corners android:radius="20dp"/>
             <size android:height="@dimen/custom_volume_dialog_miui_seekbar_width" />
-            <solid android:color="@color/volume_background_tint" />
+            <solid android:color="?android:attr/colorBackgroundFloating" />
         </shape>
     </item>
     <item android:id="@android:id/progress">
