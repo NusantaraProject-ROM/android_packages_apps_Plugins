@@ -187,7 +187,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     private boolean mExpanded;
 
     private boolean mLeftVolumeRocker;
-
+    private int mTimeOut = 3;
     private SettingsObserver settingsObserver;
 
     public VolumeDialogImpl() {}
@@ -384,6 +384,7 @@ public class VolumeDialogImpl implements VolumeDialog {
 
         void observe() {
             mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.AUDIO_PANEL_VIEW_POSITION), false, this, UserHandle.USER_ALL);
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.AUDIO_PANEL_VIEW_TIMEOUT), false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -395,9 +396,9 @@ public class VolumeDialogImpl implements VolumeDialog {
         }
 
         public void update() {
-             mLeftVolumeRocker = Settings.System.getIntForUser(mContext.getContentResolver(),
+            mLeftVolumeRocker = Settings.System.getIntForUser(mContext.getContentResolver(),
                 Settings.System.AUDIO_PANEL_VIEW_POSITION, 0, UserHandle.USER_CURRENT) == 1;
-             initDialog();
+            mTimeOut = Settings.System.getIntForUser(mContext.getContentResolver(), Settings.System.AUDIO_PANEL_VIEW_TIMEOUT, 3, UserHandle.USER_CURRENT);
         }
     }
 
@@ -922,8 +923,7 @@ public class VolumeDialogImpl implements VolumeDialog {
                     AccessibilityManager.FLAG_CONTENT_TEXT
                             | AccessibilityManager.FLAG_CONTENT_CONTROLS);
         }
-        return mAccessibilityMgr.getRecommendedTimeoutMillis(DIALOG_TIMEOUT_MILLIS,
-                AccessibilityManager.FLAG_CONTENT_CONTROLS);
+        return mTimeOut * 1000;
     }
 
     protected void dismissH(int reason) {
