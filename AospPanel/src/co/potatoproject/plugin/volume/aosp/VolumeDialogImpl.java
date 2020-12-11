@@ -123,7 +123,7 @@ import java.util.List;
 @Requires(target = VolumeDialog.Callback.class, version = VolumeDialog.Callback.VERSION)
 @Requires(target = VolumeDialogController.class, version = VolumeDialogController.VERSION)
 @Requires(target = ActivityStarter.class, version = ActivityStarter.VERSION)
-public class VolumeDialogImpl implements VolumeDialog {
+public class VolumeDialogImpl extends PanelSideAware implements VolumeDialog {
     private static final String TAG = Utils.logTag(VolumeDialogImpl.class);
     public static final String ACTION_MEDIA_OUTPUT =
             "com.android.settings.panel.action.MEDIA_OUTPUT";
@@ -185,8 +185,6 @@ public class VolumeDialogImpl implements VolumeDialog {
 
     private boolean mExpanded;
 
-    private boolean mLeftVolumeRocker;
-
     public VolumeDialogImpl() {}
 
     @Override
@@ -202,7 +200,7 @@ public class VolumeDialogImpl implements VolumeDialog {
         mShowActiveStreamOnly = showActiveStreamOnly();
         mHasSeenODICaptionsTooltip =
                 Prefs.getBoolean(sysuiContext, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, false);
-        mLeftVolumeRocker = mSysUIContext.getResources().getBoolean(mSysUIR.bool("config_audioPanelOnLeftSide"));
+        initObserver(pluginContext, sysuiContext);
     }
 
     public void init(int windowType, Callback callback) {
@@ -212,6 +210,11 @@ public class VolumeDialogImpl implements VolumeDialog {
 
         mController.addCallback(mControllerCallbackH, mHandler);
         mController.getState();
+    }
+
+    @Override
+    protected void onSideChange() {
+        initDialog();
     }
 
     @Override
@@ -1593,7 +1596,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     }
 
     private boolean isAudioPanelOnLeftSide() {
-        return mLeftVolumeRocker;
+        return mPanelOnLeftSide;
     }
 
     private static class VolumeRow {

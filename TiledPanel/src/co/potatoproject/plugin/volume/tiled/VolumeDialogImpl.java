@@ -127,7 +127,7 @@ import java.util.List;
 @Requires(target = VolumeDialog.Callback.class, version = VolumeDialog.Callback.VERSION)
 @Requires(target = VolumeDialogController.class, version = VolumeDialogController.VERSION)
 @Requires(target = ActivityStarter.class, version = ActivityStarter.VERSION)
-public class VolumeDialogImpl implements VolumeDialog {
+public class VolumeDialogImpl extends PanelSideAware implements VolumeDialog {
     private static final String TAG = Utils.logTag(VolumeDialogImpl.class);
     public static final String ACTION_MEDIA_OUTPUT =
             "com.android.settings.panel.action.MEDIA_OUTPUT";
@@ -188,7 +188,6 @@ public class VolumeDialogImpl implements VolumeDialog {
     private ViewStub mODICaptionsTooltipViewStub;
     private View mODICaptionsTooltipView = null;
 
-    private boolean mLeftVolumeRocker;
     private Drawable mSwitchStreamSelectedDrawable;
     private boolean mActiveStreamManuallyModified = false;
 
@@ -207,7 +206,7 @@ public class VolumeDialogImpl implements VolumeDialog {
         mShowActiveStreamOnly = showActiveStreamOnly();
         mHasSeenODICaptionsTooltip =
                 Prefs.getBoolean(sysuiContext, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, false);
-        mLeftVolumeRocker = false;//mSysUIContext.getResources().getBoolean(mSysUIR.bool("config_audioPanelOnLeftSide"));
+        initObserver(pluginContext, sysuiContext);
     }
 
     public void init(int windowType, Callback callback) {
@@ -217,6 +216,13 @@ public class VolumeDialogImpl implements VolumeDialog {
 
         mController.addCallback(mControllerCallbackH, mHandler);
         mController.getState();
+    }
+
+    @Override
+    protected void onSideChange() {
+        initDialog();
+	mConfigurableTexts.update();
+	mController.getState();
     }
 
     @Override
@@ -353,7 +359,8 @@ public class VolumeDialogImpl implements VolumeDialog {
         mActiveStreamManuallyModified = false;
 
         updateRowsH(getActiveRow());
-        initOutputSwitcherH();
+        updateSwitchStreamButtonsH(getActiveRow());
+	initOutputSwitcherH();
         initRingerH();
         initODICaptionsH();
     }
@@ -468,7 +475,6 @@ public class VolumeDialogImpl implements VolumeDialog {
 
     private VolumeRow findRow(int stream) {
         for (VolumeRow row : mRows) {
-            Log.d("Le cringe 2", String.valueOf(row.stream));
             if (row.stream == stream) return row;
         }
         return null;
@@ -1678,7 +1684,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     }
 
     private boolean isAudioPanelOnLeftSide() {
-        return mLeftVolumeRocker;
+        return mPanelOnLeftSide;
     }
 
     private static class VolumeRow {
