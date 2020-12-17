@@ -372,9 +372,9 @@ public class VolumeDialogImpl extends PanelSideAware implements VolumeDialog {
         internalInsetsInfo.setTouchableInsets(InternalInsetsInfo.TOUCHABLE_INSETS_REGION);
         View main = mDialog.findViewById(R.id.main);
         int[] mainLocation = new int[2];
-        main.getLocationOnScreen(mainLocation);
+        main.getLocationInWindow(mainLocation);
         int[] dialogLocation = new int[2];
-        mDialogView.getLocationOnScreen(dialogLocation);
+        mDialogView.getLocationInWindow(dialogLocation);
         internalInsetsInfo.touchableRegion.set(new Region(
             mainLocation[0],
             dialogLocation[1],
@@ -928,6 +928,7 @@ public class VolumeDialogImpl extends PanelSideAware implements VolumeDialog {
                 }, 50));
         if (!isLandscape()) animator.translationX((mDialogView.getWidth() / 2.0f)*(isAudioPanelOnLeftSide() ? -1 : 1));
         animator.start();
+	mDialog.getViewTreeObserver().removeOnComputeInternalInsetsListener(mInsetsListener);
         checkODICaptionsTooltip(true);
         mController.notifyVisible(false);
         synchronized (mSafetyWarningLock) {
