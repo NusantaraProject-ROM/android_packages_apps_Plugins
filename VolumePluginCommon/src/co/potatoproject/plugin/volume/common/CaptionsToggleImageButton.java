@@ -70,7 +70,7 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
         return state;
     }
 
-    public void setCaptionsEnabled(boolean areCaptionsEnabled) {
+    public Runnable setCaptionsEnabled(boolean areCaptionsEnabled) {
         this.mCaptionsEnabled = areCaptionsEnabled;
         Resources res;
 
@@ -88,10 +88,9 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
                         : res.getString(mSysUIR.string("volume_odi_captions_hint_enable")),
                 (view, commandArguments) -> tryToSendTapConfirmedEvent());
 
-        Drawable drawable = res.getDrawable(mCaptionsEnabled
+        return this.setImageResourceAsync(mCaptionsEnabled
                 ? mSysUIR.drawable("ic_volume_odi_captions")
                 : mSysUIR.drawable("ic_volume_odi_captions_disabled"));
-        this.setImageDrawable(drawable);
     }
 
     private boolean tryToSendTapConfirmedEvent() {
