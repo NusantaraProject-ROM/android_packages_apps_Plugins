@@ -309,7 +309,7 @@ public class VolumeDialogImpl extends PanelSideAware implements VolumeDialog {
 
         FrameLayout.LayoutParams dialogViewLP =
                 (FrameLayout.LayoutParams) mDialogView.getLayoutParams();
-        if(isAudioPanelOnLeftSide()) {
+        if(!isAudioPanelOnLeftSide()) {
             mColumnHolder.removeViewAt(0);
             mTopButtons.removeViewAt(0);
             mColumnHolder.addView(mSwitchStreamColumn, 1);
