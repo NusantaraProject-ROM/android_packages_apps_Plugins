@@ -17,8 +17,7 @@
     android:layout_height="wrap_content"
     android:layout_width="@dimen/volume_dialog_panel_width"
     android:clipChildren="false"
-    android:clipToPadding="false"
-    android:theme="@style/qs_theme">
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_height="wrap_content"
@@ -53,7 +52,7 @@
                 android:progressDrawable="@drawable/volume_dialog_seekbar"
                 android:thumb="@android:color/transparent"
                 android:background="@null"
-                android:rotation="90" />
+                android:rotation="-90" />
         </FrameLayout>
 
         <co.potatoproject.plugin.volume.common.AlphaOptimizedImageButton

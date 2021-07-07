@@ -111,29 +111,41 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
-					
+						
 					<co.potatoproject.plugin.volume.common.AlphaOptimizedImageButton
-                        android:id="@+id/media_output"
-                        android:src="@drawable/ic_bluetooth_audio"
-                        android:layout_width="@dimen/volume_dialog_tap_target_size"
-                        android:layout_height="@dimen/volume_dialog_tap_target_size"
-                        android:contentDescription="@string/accessibility_volume_settings"
-                        android:background="@drawable/volume_dialog_background"
-                        android:tint="@color/accent_tint_color_selector"
-                        android:soundEffectsEnabled="false" />
-					
-					<View
-                        android:id="@+id/dummy_button"
-                        android:layout_height="1dp"
-                        android:layout_width="1dp" />
-                    <co.potatoproject.plugin.volume.common.ExpandableIndicator
-                        android:id="@+id/expandable_indicator"
-                        android:layout_width="@dimen/volume_dialog_tap_target_size"
-                        android:layout_height="@dimen/volume_dialog_tap_target_size"
-                        android:contentDescription="@string/accessibility_quick_settings_expand"
-                        android:tint="?android:attr/colorAccent"
-                        android:soundEffectsEnabled="false"
-                        android:padding="14dp" />
+                    android:id="@+id/media_output"
+                    android:src="@drawable/ic_bluetooth_audio"
+                    android:layout_width="@dimen/volume_dialog_tap_target_size"
+                    android:layout_height="@dimen/volume_dialog_tap_target_size"
+                    android:visibility="gone"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:contentDescription="@string/accessibility_volume_settings"
+                    android:background="@drawable/volume_dialog_background"
+                    android:tint="?android:attr/colorAccent"
+                    android:animateLayoutChanges="true"
+                    android:soundEffectsEnabled="false" />
+
+                <View
+                    android:id="@+id/dummy_button"
+                    android:layout_height="1dp"
+                    android:layout_width="1dp" />
+
+                <co.potatoproject.plugin.volume.common.ExpandableIndicator
+                    android:id="@+id/expandable_indicator"
+                    android:layout_width="@dimen/volume_dialog_tap_target_size"
+                    android:layout_height="@dimen/volume_dialog_tap_target_size"
+                    android:clipToPadding="false"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:contentDescription="@string/accessibility_quick_settings_expand"
+                    android:background="@drawable/ripple_drawable_20dp"
+                    android:tint="?android:attr/textColorSecondary"
+                    android:soundEffectsEnabled="false"
+                    android:padding="16dp"
+                    android:rotation="90" />
                 </FrameLayout>
             </LinearLayout>
         </LinearLayout>
