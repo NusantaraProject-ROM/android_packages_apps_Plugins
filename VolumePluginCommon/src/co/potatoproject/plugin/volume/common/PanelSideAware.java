@@ -26,6 +26,7 @@ import android.provider.Settings;
 
 public abstract class PanelSideAware {
     protected boolean mPanelOnLeftSide = false;
+    protected boolean mShowAppVolume;
 
     protected void initObserver(Context sysUIContext, Context localContext) {
         SideObserver observer = new SideObserver(sysUIContext, localContext);
@@ -41,14 +42,19 @@ public abstract class PanelSideAware {
             super(new Handler(Looper.getMainLooper()));
             mSysUIContext = sysUIContext;
             mLocalContext = localContext;
-	    mSysUIR = new SysUIR(localContext);
+	  mSysUIR = new SysUIR(localContext);
             updateSideVar();
+            updateShowVar();
         }
 
         public void observe() {
             ContentResolver resolver = mLocalContext.getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(
                 "volume_panel_on_left"),
+                false, this, UserHandle.USER_CURRENT);
+
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                "show_app_volume"),
                 false, this, UserHandle.USER_CURRENT);
         }
 
@@ -70,11 +76,19 @@ public abstract class PanelSideAware {
             mPanelOnLeftSide = panelOnLeftSide == 1;
         }
 
+        private void updateShowVar() {
+            mShowAppVolume = Settings.System.getIntForUser(mLocalContext.getContentResolver(),
+                        Settings.System.SHOW_APP_VOLUME, 0, UserHandle.USER_CURRENT) == 1;
+        }
+
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             if (uri.equals(Settings.System.getUriFor("volume_panel_on_left"))) {
                  updateSideVar();
-		 onSideChange();
+                 onSideChange();
+            } else if (uri.equals(Settings.System.getUriFor("show_app_volume"))) {
+                 updateShowVar();
+                 onSideChange();
             }
         }
     }
