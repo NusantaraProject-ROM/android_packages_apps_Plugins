@@ -199,8 +199,7 @@ public class VolumeDialogImpl extends PanelSideAware implements VolumeDialog {
         mAccessibilityMgr = mContext.getSystemService(AccessibilityManager.class);
         mShowActiveStreamOnly = showActiveStreamOnly();
         initObserver(pluginContext, sysuiContext);
-        mHasSeenODICaptionsTooltip =
-                Prefs.getBoolean(sysuiContext, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, false);
+        mHasSeenODICaptionsTooltip = true;
     }
 
     public void init(int windowType, Callback callback) {
