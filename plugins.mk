@@ -5,4 +5,5 @@ PRODUCT_PACKAGES += \
 	TiledPanel \
 	MiuiPanel \
 	P404Panel \
-	ShapeShiftPanel
+	ShapeShiftPanel \
+	JrVol
